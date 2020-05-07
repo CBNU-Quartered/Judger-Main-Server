@@ -1,8 +1,6 @@
-package com.qt.core.domain;
+package com.qt.domain;
 
 import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -19,7 +17,7 @@ public class Student {
     private Long id;
 
     @NotNull
-    private String usniversityCode;
+    private String universityCode;
 
     @NotNull
     private Long studentId;

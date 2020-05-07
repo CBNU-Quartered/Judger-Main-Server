@@ -1,4 +1,4 @@
-package com.qt.core.domain;
+package com.qt.domain;
 
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;

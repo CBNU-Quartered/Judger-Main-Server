@@ -1,11 +1,6 @@
-package com.qt.core.domain;
+package com.qt.domain;
 
-import org.synchronoss.cloud.nio.multipart.Multipart;
-
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
 @Entity
@@ -20,7 +15,8 @@ public class Problem {
     private Contest contest;
 
     @NotNull
-    private Multipart problemPdf;
+    @Lob
+    private String content;
 
     private Double timeLimit;
 

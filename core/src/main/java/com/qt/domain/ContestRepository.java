@@ -1,4 +1,4 @@
-package com.qt.core.domain;
+package com.qt.domain;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 

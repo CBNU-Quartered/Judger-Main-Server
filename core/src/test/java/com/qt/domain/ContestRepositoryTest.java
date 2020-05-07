@@ -1,4 +1,4 @@
-package com.qt.core.domain;
+package com.qt.domain;
 
 
 import org.junit.jupiter.api.DisplayName;
@@ -34,7 +34,7 @@ class ContestRepositoryTest {
                 .studentId(11l)
                 .email("e@e.e")
                 .phoneNumber("123")
-                .usniversityCode("cbnu")
+                .universityCode("cbnu")
                 .build();
 
         Student student2 = Student.builder()
@@ -42,7 +42,7 @@ class ContestRepositoryTest {
                 .studentId(22l)
                 .email("e@e.e")
                 .phoneNumber("123")
-                .usniversityCode("cbnu")
+                .universityCode("cbnu")
                 .build();
 
         studentRepository.save(student1);
