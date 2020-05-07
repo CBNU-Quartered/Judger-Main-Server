@@ -26,7 +26,7 @@ class ContestRepositoryTest {
     private StudentRepository studentRepository;
 
     @Test
-    @DisplayName("Spring Data JPA를 통한 테스트")
+    @DisplayName("Map Column 생성 테스트")
     @Rollback(false)
     public void name() {
         Student student1 = Student.builder()
