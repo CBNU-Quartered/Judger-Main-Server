@@ -20,10 +20,10 @@ import java.util.Map;
 class ContestRepositoryTest {
 
     @Autowired
-    private ContestRepository contestRepository;
+    private ContestRepositoryForTest contestRepository;
 
     @Autowired
-    private StudentRepository studentRepository;
+    private StudentRepositoryForTest studentRepository;
 
     @Test
     @DisplayName("Map Column 생성 테스트")

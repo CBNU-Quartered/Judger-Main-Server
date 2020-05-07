@@ -1,10 +1,22 @@
 package com.qt.domain;
 
+import lombok.Builder;
+import lombok.NoArgsConstructor;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
 @Entity
+@NoArgsConstructor
 public class Problem {
+
+    @Builder
+    public Problem(@NotNull Contest contest, @NotNull String content, Double timeLimit, Double memoryLimit) {
+        this.contest = contest;
+        this.content = content;
+        this.timeLimit = timeLimit;
+        this.memoryLimit = memoryLimit;
+    }
 
     @Id
     @GeneratedValue
