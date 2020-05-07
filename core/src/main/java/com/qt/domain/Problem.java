@@ -1,12 +1,14 @@
 package com.qt.domain;
 
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
 @Entity
+@Getter
 @NoArgsConstructor
 public class Problem {
 
@@ -21,6 +23,9 @@ public class Problem {
     @Id
     @GeneratedValue
     private Long id;
+
+    @NotNull
+    private String name;
 
     @NotNull
     @ManyToOne

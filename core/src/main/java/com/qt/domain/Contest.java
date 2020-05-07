@@ -2,6 +2,7 @@ package com.qt.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
@@ -10,6 +11,7 @@ import java.time.LocalDateTime;
 import java.util.Map;
 
 @Entity
+@Getter
 @NoArgsConstructor
 public class Contest {
 

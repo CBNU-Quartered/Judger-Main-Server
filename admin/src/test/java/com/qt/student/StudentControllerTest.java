@@ -1,4 +1,4 @@
-package com.qt.web;
+package com.qt.student;
 
 import com.qt.student.StudentRepository;
 import com.qt.domain.Student;
