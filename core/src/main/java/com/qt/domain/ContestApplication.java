@@ -1,6 +1,5 @@
 package com.qt.domain;
 
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedBy;
@@ -18,7 +17,6 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class ContestApplication {
 
-    @Builder
     public ContestApplication(@NotNull Contest contest, @NotNull Student student, @NotNull LocalDateTime createTime, @NotNull Boolean isApproved) {
         this.contest = contest;
         this.student = student;
@@ -26,7 +24,8 @@ public class ContestApplication {
         this.isApproved = isApproved;
     }
 
-    @Id @GeneratedValue
+    @Id
+    @GeneratedValue
     private Long id;
 
     @NotNull

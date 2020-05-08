@@ -1,6 +1,5 @@
 package com.qt.domain;
 
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedBy;
@@ -14,16 +13,6 @@ import java.time.LocalDateTime;
 @Getter
 @NoArgsConstructor
 public class Question {
-
-    @Builder
-    public Question(@NotNull Contest contest, Student student, @NotNull Integer problemNumber, @NotNull String content, String response, LocalDateTime createTime) {
-        this.contest = contest;
-        this.student = student;
-        this.problemNumber = problemNumber;
-        this.content = content;
-        this.response = response;
-        this.createTime = createTime;
-    }
 
     @Id
     @GeneratedValue
@@ -50,4 +39,12 @@ public class Question {
     @CreatedDate
     private LocalDateTime createTime;
 
+    public Question(@NotNull Contest contest, Student student, @NotNull Integer problemNumber, @NotNull String content, String response, LocalDateTime createTime) {
+        this.contest = contest;
+        this.student = student;
+        this.problemNumber = problemNumber;
+        this.content = content;
+        this.response = response;
+        this.createTime = createTime;
+    }
 }

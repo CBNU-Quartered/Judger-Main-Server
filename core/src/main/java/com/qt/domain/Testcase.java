@@ -1,6 +1,5 @@
 package com.qt.domain;
 
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -14,13 +13,6 @@ import javax.persistence.ManyToOne;
 @NoArgsConstructor
 public class Testcase {
 
-    @Builder
-    public Testcase(String input, String output, Problem problem) {
-        this.input = input;
-        this.output = output;
-        this.problem = problem;
-    }
-
     @Id
     @GeneratedValue
     private Long id;
@@ -31,4 +23,10 @@ public class Testcase {
 
     @ManyToOne
     private Problem problem;
+
+    public Testcase(String input, String output, Problem problem) {
+        this.input = input;
+        this.output = output;
+        this.problem = problem;
+    }
 }

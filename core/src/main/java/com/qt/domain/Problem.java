@@ -1,6 +1,5 @@
 package com.qt.domain;
 
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -11,14 +10,6 @@ import javax.validation.constraints.NotNull;
 @Getter
 @NoArgsConstructor
 public class Problem {
-
-    @Builder
-    public Problem(@NotNull Contest contest, @NotNull String content, Double timeLimit, Double memoryLimit) {
-        this.contest = contest;
-        this.content = content;
-        this.timeLimit = timeLimit;
-        this.memoryLimit = memoryLimit;
-    }
 
     @Id
     @GeneratedValue
@@ -38,4 +29,11 @@ public class Problem {
     private Double timeLimit;
 
     private Double memoryLimit;
+
+    public Problem(@NotNull Contest contest, @NotNull String content, Double timeLimit, Double memoryLimit) {
+        this.contest = contest;
+        this.content = content;
+        this.timeLimit = timeLimit;
+        this.memoryLimit = memoryLimit;
+    }
 }
