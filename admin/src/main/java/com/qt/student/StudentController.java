@@ -1,6 +1,7 @@
 package com.qt.student;
 
 import com.qt.domain.Student;
+import com.qt.student.dto.StudentInfo;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,8 +20,8 @@ public class StudentController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Student>> findAllStudents() {
-        List<Student> students = studentService.findAllStudents();
-        return ResponseEntity.ok(students);
+    public ResponseEntity<List<StudentInfo>> findAllStudents() {
+        List<StudentInfo> studentInfos = studentService.findAllStudents();
+        return ResponseEntity.ok(studentInfos);
     }
 }

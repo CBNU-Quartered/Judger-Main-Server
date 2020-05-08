@@ -21,8 +21,8 @@ public class ProblemController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Problem> show(@PathVariable Long id) {
-        Problem problem = problemService.findById(id);
-        return ResponseEntity.ok(problem);
+//        Problem problem = problemService.findById(id);
+        return ResponseEntity.ok().build();
     }
 
     @PostMapping

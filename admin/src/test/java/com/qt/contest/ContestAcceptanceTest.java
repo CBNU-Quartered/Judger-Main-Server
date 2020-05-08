@@ -1,6 +1,7 @@
 package com.qt.contest;
 
-import com.qt.domain.Contest;
+import com.qt.AcceptanceTestUtils;
+import com.qt.contest.dto.ContestInfo;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -17,16 +18,18 @@ import java.time.LocalDateTime;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class ContestControllerTest {
+public class ContestAcceptanceTest {
 
     @Autowired
     private WebTestClient webTestClient;
 
+    private String contestId;
+
     @BeforeEach
     @DisplayName("콘테스트 등록 테스트")
     void setUp() {
-        Contest contest = Contest.builder()
-                .name("contest")
+        ContestInfo contestInfo = ContestInfo.builder()
+                .name("contest1")
                 .description("easy contests")
                 .activeTime(LocalDateTime.now())
                 .inActiveTime(LocalDateTime.now())
@@ -36,18 +39,27 @@ public class ContestControllerTest {
                 .unFreezeTime(LocalDateTime.now())
                 .build();
 
-        webTestClient.post()
+        WebTestClient.ResponseSpec responseSpec = webTestClient.post()
                 .uri("/contests")
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
-                .body(Mono.just(contest), Contest.class)
+                .body(Mono.just(contestInfo), ContestInfo.class)
                 .exchange()
                 .expectStatus()
                 .isCreated()
-                .expectHeader().valueMatches("Location", "/contests/1");
+                .expectHeader().valueMatches("location", "/contests/[1-9]+[0-9]*");
+
+        contestId = AcceptanceTestUtils.extractDomainIdFromCreatedResourceAddress(responseSpec);
     }
 
     @Test
     @DisplayName("콘테스트 조회 테스트")
     void getContest() {
+        webTestClient.get()
+                .uri("/contests/" + contestId)
+                .exchange()
+                .expectStatus()
+                .isOk()
+                .expectBody()
+                .jsonPath("$.name").isEqualTo("contest1");
     }
 }
