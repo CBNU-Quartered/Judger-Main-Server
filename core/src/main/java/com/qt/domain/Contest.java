@@ -1,14 +1,15 @@
 package com.qt.domain;
 
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Lob;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
-import java.util.Map;
 
 @Entity
 @Getter
@@ -16,7 +17,7 @@ import java.util.Map;
 public class Contest {
 
     @Builder
-    public Contest(@NotNull String name, String description, @NotNull LocalDateTime activeTime, @NotNull LocalDateTime inActiveTime, @NotNull LocalDateTime startTime, @NotNull LocalDateTime endTime, @NotNull LocalDateTime freezeTime, @NotNull LocalDateTime unFreezeTime, Map<Student, Boolean> applicants) {
+    public Contest(@NotNull String name, String description, @NotNull LocalDateTime activeTime, @NotNull LocalDateTime inActiveTime, @NotNull LocalDateTime startTime, @NotNull LocalDateTime endTime, @NotNull LocalDateTime freezeTime, @NotNull LocalDateTime unFreezeTime) {
         this.name = name;
         this.description = description;
         this.activeTime = activeTime;
@@ -25,7 +26,6 @@ public class Contest {
         this.endTime = endTime;
         this.freezeTime = freezeTime;
         this.unFreezeTime = unFreezeTime;
-        this.applicants = applicants;
     }
 
     @Id
@@ -55,12 +55,4 @@ public class Contest {
 
     @NotNull
     private LocalDateTime unFreezeTime;
-
-    @ElementCollection
-    @CollectionTable(name = "APPLYING",
-            joinColumns = {@JoinColumn(name = "CONTEST_ID")})
-    @Column(name = "APPROVED")
-    @MapKeyJoinColumn(name = "STUDENT_ID", referencedColumnName = "ID")
-    private Map<Student, Boolean> applicants;
-
 }
