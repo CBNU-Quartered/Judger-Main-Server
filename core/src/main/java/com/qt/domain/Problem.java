@@ -2,9 +2,11 @@ package com.qt.domain;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -30,10 +32,15 @@ public class Problem {
 
     private Double memoryLimit;
 
-    public Problem(@NotNull Contest contest, @NotNull String content, Double timeLimit, Double memoryLimit) {
+    @CreatedDate
+    private LocalDateTime createTime;
+
+    public Problem(@NotNull String name, @NotNull Contest contest, @NotNull String content, Double timeLimit, Double memoryLimit, LocalDateTime createTime) {
+        this.name = name;
         this.contest = contest;
         this.content = content;
         this.timeLimit = timeLimit;
         this.memoryLimit = memoryLimit;
+        this.createTime = createTime;
     }
 }
