@@ -20,13 +20,8 @@ public class Problem {
     @NotNull
     private String name;
 
-    @NotNull
     @ManyToOne
     private Contest contest;
-
-    @NotNull
-    @Lob
-    private String content;
 
     private Double timeLimit;
 
@@ -35,12 +30,10 @@ public class Problem {
     @CreatedDate
     private LocalDateTime createTime;
 
-    public Problem(@NotNull String name, @NotNull Contest contest, @NotNull String content, Double timeLimit, Double memoryLimit, LocalDateTime createTime) {
+    public Problem(@NotNull String name, Contest contest, Double timeLimit, Double memoryLimit) {
         this.name = name;
         this.contest = contest;
-        this.content = content;
         this.timeLimit = timeLimit;
         this.memoryLimit = memoryLimit;
-        this.createTime = createTime;
     }
 }
