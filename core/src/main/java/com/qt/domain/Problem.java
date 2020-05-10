@@ -34,10 +34,9 @@ public class Problem {
     @CreatedDate
     private LocalDateTime createTime;
 
-    public Problem(@NotNull String name, @NotNull String identifier, Contest contest, Double timeLimit, Double memoryLimit) {
+    public Problem(@NotNull String name, @NotNull String identifier, Double timeLimit, Double memoryLimit) {
         this.name = name;
         this.identifier = identifier;
-        this.contest = contest;
         this.timeLimit = timeLimit;
         this.memoryLimit = memoryLimit;
     }

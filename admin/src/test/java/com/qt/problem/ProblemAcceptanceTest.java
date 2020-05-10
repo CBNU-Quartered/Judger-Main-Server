@@ -23,7 +23,7 @@ public class ProblemAcceptanceTest {
     private String problemId;
 
     @BeforeEach
-    @DisplayName("문제 pdf 파일 업로드 테스트")
+    @DisplayName("문제 저장 테스트")
     void setUp() {
         ByteArrayResource file = new ByteArrayResource(new byte[]{1, 2, 3}) {
             @Override
@@ -45,12 +45,13 @@ public class ProblemAcceptanceTest {
     }
 
     @Test
-    @DisplayName("문제 pdf 파일 조회 테스트")
+    @DisplayName("문제 정보 조회 테스트")
     void findAllFiles() {
         webTestClient.get()
                 .uri("/problems/" + problemId)
                 .exchange()
                 .expectStatus()
-                .isOk();
+                .isOk()
+                .expectBody();
     }
 }

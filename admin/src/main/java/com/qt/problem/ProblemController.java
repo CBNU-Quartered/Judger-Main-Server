@@ -19,15 +19,14 @@ public class ProblemController {
         this.problemService = problemService;
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Problem> show(@PathVariable Long id) {
-//        Problem problem = problemService.findById(id);
-        return ResponseEntity.ok().build();
+    @PostMapping
+    public ResponseEntity uploadFile(@RequestParam MultipartFile file) throws IOException {
+        Long problemId = problemService.save(file);
+        return ResponseEntity.created(URI.create("/problems/" + problemId)).build();
     }
 
-    @PostMapping
-    public ResponseEntity upload(@RequestParam MultipartFile file) throws IOException {
-        Problem problem = problemService.save(file);
-        return ResponseEntity.created(URI.create("/problems/" + 1l)).build();
+    @GetMapping("/{id}")
+    public ResponseEntity<Problem> showProblem(@PathVariable Long id) {
+        return ResponseEntity.ok().build();
     }
 }
