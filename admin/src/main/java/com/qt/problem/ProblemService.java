@@ -1,6 +1,8 @@
 package com.qt.problem;
 
 import com.qt.domain.Problem;
+import com.qt.problem.dto.ProblemInfo;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -13,11 +15,14 @@ import java.util.UUID;
 @Transactional
 public class ProblemService {
 
-    private static final String LOCAL_PROBLEM_STORAGE = "/Users/hyogeon/IdeaProjects/judger-main-server/admin/src/main/resources/static/";
-    private final ProblemRepository problemRepository;
+    private static final String LOCAL_PROBLEM_STORAGE = "/Users/hyogeon/IdeaProjects/judger-main-server/admin/src/main/resources/static/problems/";
 
-    public ProblemService(ProblemRepository problemRepository) {
+    private final ProblemRepository problemRepository;
+    private final ModelMapper modelMapper;
+
+    public ProblemService(ProblemRepository problemRepository, ModelMapper modelMapper) {
         this.problemRepository = problemRepository;
+        this.modelMapper = modelMapper;
     }
 
     public Long save(MultipartFile file) throws IOException {
@@ -28,9 +33,10 @@ public class ProblemService {
     }
 
     @Transactional(readOnly = true)
-    public Problem findById(Long id) {
+    public ProblemInfo findById(Long id) {
         return problemRepository
                 .findById(id)
+                .map(problem -> modelMapper.map(problem, ProblemInfo.class))
                 .orElseThrow(ProblemNotFoundException::new);
     }
 

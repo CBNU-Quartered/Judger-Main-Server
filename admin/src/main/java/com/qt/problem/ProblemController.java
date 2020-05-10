@@ -1,6 +1,6 @@
 package com.qt.problem;
 
-import com.qt.domain.Problem;
+import com.qt.problem.dto.ProblemInfo;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -26,7 +26,8 @@ public class ProblemController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Problem> showProblem(@PathVariable Long id) {
-        return ResponseEntity.ok().build();
+    public ResponseEntity<ProblemInfo> showProblem(@PathVariable Long id) {
+        ProblemInfo problemInfo = problemService.findById(id);
+        return ResponseEntity.ok(problemInfo);
     }
 }

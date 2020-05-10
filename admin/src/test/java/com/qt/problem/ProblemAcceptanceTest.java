@@ -52,6 +52,7 @@ public class ProblemAcceptanceTest {
                 .exchange()
                 .expectStatus()
                 .isOk()
-                .expectBody();
+                .expectBody()
+                .jsonPath("$.name", "test.pdf");
     }
 }
