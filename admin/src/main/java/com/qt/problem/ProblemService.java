@@ -1,8 +1,11 @@
 package com.qt.problem;
 
 import com.qt.domain.Problem;
+import com.qt.problem.dto.FileInfo;
 import com.qt.problem.dto.ProblemInfo;
 import org.modelmapper.ModelMapper;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -19,10 +22,12 @@ public class ProblemService {
 
     private final ProblemRepository problemRepository;
     private final ModelMapper modelMapper;
+    private final ResourceLoader resourceLoader;
 
-    public ProblemService(ProblemRepository problemRepository, ModelMapper modelMapper) {
+    public ProblemService(ProblemRepository problemRepository, ModelMapper modelMapper, ResourceLoader resourceLoader) {
         this.problemRepository = problemRepository;
         this.modelMapper = modelMapper;
+        this.resourceLoader = resourceLoader;
     }
 
     public Long save(MultipartFile file) throws IOException {
@@ -38,6 +43,20 @@ public class ProblemService {
                 .findById(id)
                 .map(problem -> modelMapper.map(problem, ProblemInfo.class))
                 .orElseThrow(ProblemNotFoundException::new);
+    }
+
+    public FileInfo findFile(Long id) throws IOException {
+        Problem problem = problemRepository.findById(id).orElseThrow(ProblemNotFoundException::new);
+
+        String identifier = problem.getIdentifier();
+        Resource resource = resourceLoader.getResource("classpath:static/problems/" + identifier);
+        File file = resource.getFile();
+
+        return FileInfo.builder()
+                .contentDisposition(problem.getName())
+                .contentLength(String.valueOf(file.length()))
+                .resource(resource)
+                .build();
     }
 
     private String saveFile(MultipartFile file) throws IOException {

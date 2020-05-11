@@ -47,6 +47,6 @@ subprojects {
 
 project(':admin') {
     dependencies {
-        implementation project(':core')
+        compile project(':core')
     }
 }

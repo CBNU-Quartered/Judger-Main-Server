@@ -8,6 +8,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.io.ByteArrayResource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
@@ -23,7 +24,7 @@ public class ProblemAcceptanceTest {
     private String problemId;
 
     @BeforeEach
-    @DisplayName("문제 저장 테스트")
+    @DisplayName("파일, 문제 저장 테스트")
     void setUp() {
         ByteArrayResource file = new ByteArrayResource(new byte[]{1, 2, 3}) {
             @Override
@@ -54,5 +55,16 @@ public class ProblemAcceptanceTest {
                 .isOk()
                 .expectBody()
                 .jsonPath("$.name", "test.pdf");
+    }
+
+    @Test
+    @DisplayName("파일 다운로드 테스트")
+    void downloadFile() {
+        webTestClient.get()
+                .uri("/problems/files/" + problemId)
+                .exchange()
+                .expectStatus()
+                .isOk()
+                .expectHeader().valueMatches(HttpHeaders.CONTENT_DISPOSITION, "inline");
     }
 }
