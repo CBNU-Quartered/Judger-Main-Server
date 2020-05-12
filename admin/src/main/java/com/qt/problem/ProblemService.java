@@ -2,7 +2,8 @@ package com.qt.problem;
 
 import com.qt.domain.Problem;
 import com.qt.problem.dto.FileInfo;
-import com.qt.problem.dto.ProblemInfo;
+import com.qt.problem.dto.ProblemRequestInfo;
+import com.qt.problem.dto.ProblemResponseInfo;
 import org.modelmapper.ModelMapper;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
@@ -19,6 +20,7 @@ import java.util.UUID;
 public class ProblemService {
 
     private static final String LOCAL_PROBLEM_STORAGE = "/Users/hyogeon/IdeaProjects/judger-main-server/admin/src/main/resources/static/problems/";
+    private static final String FILE_PATH = "file:";
 
     private final ProblemRepository problemRepository;
     private final ModelMapper modelMapper;
@@ -30,18 +32,18 @@ public class ProblemService {
         this.resourceLoader = resourceLoader;
     }
 
-    public Long save(MultipartFile file) throws IOException {
+    public Long save(ProblemRequestInfo problemRequestInfo, MultipartFile file) throws IOException {
         String identifier = saveFile(file);
 
-        Problem problem = new Problem(file.getOriginalFilename(), identifier, 1d, 1d);
+        Problem problem = new Problem(file.getOriginalFilename(), identifier, problemRequestInfo.getTimeLimit(), problemRequestInfo.getMemoryLimit());
         return problemRepository.save(problem).getId();
     }
 
     @Transactional(readOnly = true)
-    public ProblemInfo findById(Long id) {
+    public ProblemResponseInfo findById(Long id) {
         return problemRepository
                 .findById(id)
-                .map(problem -> modelMapper.map(problem, ProblemInfo.class))
+                .map(problem -> modelMapper.map(problem, ProblemResponseInfo.class))
                 .orElseThrow(ProblemNotFoundException::new);
     }
 
@@ -49,12 +51,11 @@ public class ProblemService {
         Problem problem = problemRepository.findById(id).orElseThrow(ProblemNotFoundException::new);
 
         String identifier = problem.getIdentifier();
-        Resource resource = resourceLoader.getResource(LOCAL_PROBLEM_STORAGE + identifier);
-        File file = resource.getFile();
+        Resource resource = resourceLoader.getResource(FILE_PATH +LOCAL_PROBLEM_STORAGE + identifier);
 
         return FileInfo.builder()
                 .contentDisposition(problem.getName())
-                .contentLength(String.valueOf(file.length()))
+                .contentLength(String.valueOf(resource.getFile().length()))
                 .resource(resource)
                 .build();
     }

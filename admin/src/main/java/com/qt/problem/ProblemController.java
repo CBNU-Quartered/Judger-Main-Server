@@ -1,7 +1,8 @@
 package com.qt.problem;
 
 import com.qt.problem.dto.FileInfo;
-import com.qt.problem.dto.ProblemInfo;
+import com.qt.problem.dto.ProblemRequestInfo;
+import com.qt.problem.dto.ProblemResponseInfo;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -23,18 +24,18 @@ public class ProblemController {
     }
 
     @PostMapping
-    public ResponseEntity uploadFile(@RequestParam MultipartFile file) throws IOException {
-        Long problemId = problemService.save(file);
+    public ResponseEntity uploadFile(@ModelAttribute ProblemRequestInfo problemRequestInfo, @RequestParam MultipartFile file) throws IOException {
+        Long problemId = problemService.save(problemRequestInfo, file);
         return ResponseEntity.created(URI.create("/problems/" + problemId)).build();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ProblemInfo> showProblem(@PathVariable Long id) {
-        ProblemInfo problemInfo = problemService.findById(id);
-        return ResponseEntity.ok(problemInfo);
+    public ResponseEntity<ProblemResponseInfo> showProblem(@PathVariable Long id) {
+        ProblemResponseInfo problemResponseInfo = problemService.findById(id);
+        return ResponseEntity.ok(problemResponseInfo);
     }
 
-    @GetMapping("/files/{id}")
+    @GetMapping("/{id}/files")
     public ResponseEntity<Resource> downloadFile(@PathVariable Long id) throws IOException {
         FileInfo fileInfo = problemService.findFile(id);
         return ResponseEntity.ok()

@@ -24,7 +24,7 @@ public class ProblemAcceptanceTest {
     private String problemId;
 
     @BeforeEach
-    @DisplayName("파일, 문제 저장 테스트")
+    @DisplayName("pdf 파일, 문제 저장 테스트")
     void setUp() {
         ByteArrayResource file = new ByteArrayResource(new byte[]{1, 2, 3}) {
             @Override
@@ -36,7 +36,9 @@ public class ProblemAcceptanceTest {
         WebTestClient.ResponseSpec responseSpec = webTestClient.post()
                 .uri("/problems")
                 .contentType(MediaType.MULTIPART_FORM_DATA)
-                .body(BodyInserters.fromMultipartData("file", file))
+                .body(BodyInserters.fromMultipartData("file", file)
+                        .with("timeLimit", 1d)
+                        .with("memoryLimit", 1d))
                 .exchange()
                 .expectStatus()
                 .isCreated()
@@ -47,7 +49,7 @@ public class ProblemAcceptanceTest {
 
     @Test
     @DisplayName("문제 정보 조회 테스트")
-    void findAllFiles() {
+    void showProblem() {
         webTestClient.get()
                 .uri("/problems/" + problemId)
                 .exchange()
@@ -58,10 +60,10 @@ public class ProblemAcceptanceTest {
     }
 
     @Test
-    @DisplayName("파일 다운로드 테스트")
+    @DisplayName("문제 pdf 파일 다운로드 테스트")
     void downloadFile() {
         webTestClient.get()
-                .uri("/problems/files/" + problemId)
+                .uri("/problems/" + problemId + "/files")
                 .accept(MediaType.APPLICATION_PDF)
                 .exchange()
                 .expectStatus()
