@@ -62,6 +62,7 @@ public class ProblemAcceptanceTest {
     void downloadFile() {
         webTestClient.get()
                 .uri("/problems/files/" + problemId)
+                .accept(MediaType.APPLICATION_PDF)
                 .exchange()
                 .expectStatus()
                 .isOk()

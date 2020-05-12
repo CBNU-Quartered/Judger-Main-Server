@@ -17,7 +17,7 @@ public class TestRunner implements ApplicationRunner {
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
-        Problem problem = new Problem("asd.pdf", "123", 1d, 1d);
-        problemRepository.save(problem);
+//        Problem problem = new Problem("asd.pdf", "123", 1d, 1d);
+//        problemRepository.save(problem);
     }
 }

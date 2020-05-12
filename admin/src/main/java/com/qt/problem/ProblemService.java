@@ -49,7 +49,7 @@ public class ProblemService {
         Problem problem = problemRepository.findById(id).orElseThrow(ProblemNotFoundException::new);
 
         String identifier = problem.getIdentifier();
-        Resource resource = resourceLoader.getResource("classpath:static/problems/" + identifier);
+        Resource resource = resourceLoader.getResource(LOCAL_PROBLEM_STORAGE + identifier);
         File file = resource.getFile();
 
         return FileInfo.builder()
@@ -61,6 +61,7 @@ public class ProblemService {
 
     private String saveFile(MultipartFile file) throws IOException {
         String identifier = UUID.randomUUID().toString();
+
         File dest = new File(LOCAL_PROBLEM_STORAGE + identifier);
         file.transferTo(dest);
         return identifier;
