@@ -1,6 +1,7 @@
-package com.qt.domain;
+package com.qt.domain.problem;
 
-import com.qt.problem.dto.ProblemInfo;
+import com.qt.domain.contest.Contest;
+import com.qt.domain.problem.dto.ProblemInfo;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;

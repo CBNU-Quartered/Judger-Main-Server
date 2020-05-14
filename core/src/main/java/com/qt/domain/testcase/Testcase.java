@@ -1,5 +1,6 @@
-package com.qt.domain;
+package com.qt.domain.testcase;
 
+import com.qt.domain.problem.Problem;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 

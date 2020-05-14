@@ -1,7 +1,6 @@
 package com.qt.student;
 
-import com.qt.domain.Student;
-import com.qt.student.dto.StudentInfo;
+import com.qt.domain.student.dto.StudentInfo;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;

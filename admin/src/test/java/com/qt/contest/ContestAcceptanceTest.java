@@ -57,4 +57,31 @@ public class ContestAcceptanceTest {
                 .expectBody()
                 .jsonPath("$.name").isEqualTo("contest1");
     }
+
+    @Test
+    @DisplayName("콘테스트 수정 테스트")
+    void updateContest() {
+        webTestClient.post()
+                .uri("/contests/" + contestId)
+                .contentType(MediaType.MULTIPART_FORM_DATA)
+                .body(BodyInserters.fromFormData("name", "update contest")
+                        .with("description", "easy contests")
+                        .with("activeTime", String.valueOf(LocalDateTime.now()))
+                        .with("inActiveTime", String.valueOf(LocalDateTime.now()))
+                        .with("startTime", String.valueOf(LocalDateTime.now()))
+                        .with("endTime", String.valueOf(LocalDateTime.now()))
+                        .with("freezeTime", String.valueOf(LocalDateTime.now()))
+                        .with("unFreezeTime", String.valueOf(LocalDateTime.now())))
+                .exchange()
+                .expectStatus()
+                .isNoContent();
+
+        webTestClient.get()
+                .uri("/contests/" + contestId)
+                .exchange()
+                .expectStatus()
+                .isOk()
+                .expectBody()
+                .jsonPath("$.name").isEqualTo("update contest");
+    }
 }

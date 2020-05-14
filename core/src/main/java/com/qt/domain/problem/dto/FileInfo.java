@@ -1,4 +1,4 @@
-package com.qt.problem.dto;
+package com.qt.domain.problem.dto;
 
 import lombok.Builder;
 import lombok.Getter;

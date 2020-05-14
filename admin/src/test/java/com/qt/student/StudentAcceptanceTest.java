@@ -1,8 +1,6 @@
 package com.qt.student;
 
-import com.qt.student.StudentRepository;
-import com.qt.domain.Student;
-import com.qt.student.dto.StudentInfo;
+import com.qt.domain.student.dto.StudentInfo;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

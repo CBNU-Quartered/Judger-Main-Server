@@ -1,8 +1,8 @@
 package com.qt.problem;
 
-import com.qt.domain.Problem;
-import com.qt.problem.dto.FileInfo;
-import com.qt.problem.dto.ProblemInfo;
+import com.qt.domain.problem.Problem;
+import com.qt.domain.problem.dto.FileInfo;
+import com.qt.domain.problem.dto.ProblemInfo;
 import org.modelmapper.ModelMapper;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;

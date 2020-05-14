@@ -1,6 +1,5 @@
 package com.qt;
 
-import com.qt.domain.Problem;
 import com.qt.problem.ProblemRepository;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;

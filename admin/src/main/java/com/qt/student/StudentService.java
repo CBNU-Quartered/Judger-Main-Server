@@ -1,7 +1,6 @@
 package com.qt.student;
 
-import com.qt.domain.Student;
-import com.qt.student.dto.StudentInfo;
+import com.qt.domain.student.dto.StudentInfo;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

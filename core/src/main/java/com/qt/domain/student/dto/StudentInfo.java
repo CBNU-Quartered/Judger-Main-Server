@@ -1,23 +1,20 @@
-package com.qt.domain;
+package com.qt.domain.student.dto;
 
+import com.qt.domain.student.Student;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 
-@Entity
+@Setter
 @Getter
 @NoArgsConstructor
-public class Student {
+public class StudentInfo {
 
-    @Id
-    @GeneratedValue
-    private Long id;
     @NotNull
     private String universityCode;
     @NotNull
@@ -31,7 +28,8 @@ public class Student {
     @NotNull
     private String phoneNumber;
 
-    public Student(@NotNull String universityCode, @NotNull Long studentId, @NotNull String name, @NotNull @Email String email, @NotNull String phoneNumber) {
+    @Builder
+    public StudentInfo(@NotNull String universityCode, @NotNull Long studentId, @NotNull String name, @NotNull @Email String email, @NotNull String phoneNumber) {
         this.universityCode = universityCode;
         this.studentId = studentId;
         this.name = name;
@@ -39,4 +37,7 @@ public class Student {
         this.phoneNumber = phoneNumber;
     }
 
+    public Student toEntity() {
+        return new Student(universityCode, studentId, name, email, phoneNumber);
+    }
 }

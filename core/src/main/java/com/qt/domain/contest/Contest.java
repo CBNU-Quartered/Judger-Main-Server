@@ -1,5 +1,6 @@
-package com.qt.domain;
+package com.qt.domain.contest;
 
+import com.qt.domain.contest.dto.ContestInfo;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -52,5 +53,17 @@ public class Contest {
         this.endTime = endTime;
         this.freezeTime = freezeTime;
         this.unFreezeTime = unFreezeTime;
+    }
+
+    public Long updateTo(ContestInfo contestInfo) {
+        this.name = contestInfo.getName();
+        this.description = contestInfo.getDescription();
+        this.activeTime = contestInfo.getActiveTime();
+        this.inActiveTime = contestInfo.getInActiveTime();
+        this.startTime = contestInfo.getStartTime();
+        this.endTime = contestInfo.getEndTime();
+        this.freezeTime = contestInfo.getFreezeTime();
+        this.unFreezeTime = contestInfo.getUnFreezeTime();
+        return id;
     }
 }

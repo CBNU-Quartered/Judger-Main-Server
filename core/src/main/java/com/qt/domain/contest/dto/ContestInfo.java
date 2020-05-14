@@ -1,6 +1,6 @@
-package com.qt.contest.dto;
+package com.qt.domain.contest.dto;
 
-import com.qt.domain.Contest;
+import com.qt.domain.contest.Contest;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

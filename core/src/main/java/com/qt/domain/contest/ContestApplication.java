@@ -1,5 +1,6 @@
-package com.qt.domain;
+package com.qt.domain.contest;
 
+import com.qt.domain.student.Student;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedBy;
