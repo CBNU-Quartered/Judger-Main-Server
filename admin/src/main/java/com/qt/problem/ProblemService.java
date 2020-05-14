@@ -43,13 +43,12 @@ public class ProblemService {
         return problemRepository
                 .findById(id)
                 .map(problem -> modelMapper.map(problem, ProblemInfo.class))
-                .orElseThrow(ProblemNotFoundException::new);
+                .orElseThrow(NotFoundProblemException::new);
     }
 
     @Transactional(readOnly = true)
     public FileInfo findFile(Long id) throws IOException {
-        Problem problem = problemRepository.findById(id).orElseThrow(ProblemNotFoundException::new);
-
+        Problem problem = problemRepository.findById(id).orElseThrow(NotFoundProblemException::new);
         String identifier = problem.getIdentifier();
         Resource resource = resourceLoader.getResource(FILE_PATH + LOCAL_PROBLEM_STORAGE + identifier);
 
@@ -61,12 +60,15 @@ public class ProblemService {
     }
 
     public Long updateProblem(Long id, ProblemInfo problemInfo, MultipartFile file) throws IOException {
-        Problem problem = problemRepository.findById(id).orElseThrow(ProblemNotFoundException::new);
-        Resource resource = resourceLoader.getResource(FILE_PATH + LOCAL_PROBLEM_STORAGE + problem.getIdentifier());
-        resource.getFile().delete();
+        Problem problem = deleteFile(id);
 
         String identifier = saveFile(file);
         return problem.updateTo(problemInfo.getName(), identifier, problem.getTimeLimit(), problemInfo.getMemoryLimit());
+    }
+
+    public void deleteProblem(Long id) throws IOException {
+        Problem problem = deleteFile(id);
+        problemRepository.delete(problem);
     }
 
     private String saveFile(MultipartFile file) throws IOException {
@@ -75,5 +77,12 @@ public class ProblemService {
         File dest = new File(LOCAL_PROBLEM_STORAGE + identifier);
         file.transferTo(dest);
         return identifier;
+    }
+
+    private Problem deleteFile(Long id) throws IOException {
+        Problem problem = problemRepository.findById(id).orElseThrow(NotFoundProblemException::new);
+        Resource resource = resourceLoader.getResource(FILE_PATH + LOCAL_PROBLEM_STORAGE + problem.getIdentifier());
+        resource.getFile().delete();
+        return problem;
     }
 }

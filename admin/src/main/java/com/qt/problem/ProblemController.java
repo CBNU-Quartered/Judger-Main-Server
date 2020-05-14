@@ -45,8 +45,19 @@ public class ProblemController {
     }
 
     @PostMapping("/{id}")
-    public ResponseEntity updateProblem(@PathVariable Long id, @ModelAttribute ProblemInfo problemInfo, @RequestParam MultipartFile file) throws IOException {
+    public ResponseEntity deleteProblem(@PathVariable Long id, @ModelAttribute ProblemInfo problemInfo, @RequestParam MultipartFile file) throws IOException {
         problemService.updateProblem(id, problemInfo, file);
         return ResponseEntity.noContent().build();
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity deleteProblem(@PathVariable Long id) throws IOException {
+        problemService.deleteProblem(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @ExceptionHandler
+    public ResponseEntity eventErrorHandler(NotFoundProblemException exception) {
+        return ResponseEntity.notFound().build();
     }
 }

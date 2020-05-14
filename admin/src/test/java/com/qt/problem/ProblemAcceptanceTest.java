@@ -101,4 +101,20 @@ public class ProblemAcceptanceTest {
                 .expectBody()
                 .jsonPath("$.name", "update");
     }
+
+    @Test
+    @DisplayName("문제, pdf 파일 삭제 테스트")
+    void deleteProblem() {
+        webTestClient.delete()
+                .uri("/problems/" + problemId)
+                .exchange()
+                .expectStatus()
+                .isNoContent();
+
+        webTestClient.get()
+                .uri("/problems/" + problemId)
+                .exchange()
+                .expectStatus()
+                .isNotFound();
+    }
 }
