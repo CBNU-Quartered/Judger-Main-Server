@@ -23,7 +23,7 @@ public class ProblemController {
     }
 
     @PostMapping
-    public ResponseEntity uploadFile(@ModelAttribute ProblemInfo problemInfo, @RequestParam MultipartFile file) throws IOException {
+    public ResponseEntity createProblem(@ModelAttribute ProblemInfo problemInfo, @RequestParam MultipartFile file) throws IOException {
         Long problemId = problemService.save(problemInfo, file);
         return ResponseEntity.created(URI.create("/problems/" + problemId)).build();
     }

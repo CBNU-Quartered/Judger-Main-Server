@@ -1,6 +1,7 @@
 package com.qt.problem;
 
 import com.qt.AcceptanceTestUtils;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -25,7 +26,7 @@ public class ProblemAcceptanceTest {
 
     @BeforeEach
     @DisplayName("pdf 파일, 문제 저장 테스트")
-    void setUp() {
+    void createProblem() {
         ByteArrayResource file = new ByteArrayResource(new byte[]{1, 2, 3}) {
             @Override
             public String getFilename() {
@@ -102,7 +103,7 @@ public class ProblemAcceptanceTest {
                 .jsonPath("$.name", "update");
     }
 
-    @Test
+    @AfterEach
     @DisplayName("문제, pdf 파일 삭제 테스트")
     void deleteProblem() {
         webTestClient.delete()
