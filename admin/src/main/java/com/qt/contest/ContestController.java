@@ -17,7 +17,7 @@ public class ContestController {
     }
 
     @PostMapping
-    public ResponseEntity createContest(@RequestBody ContestInfo contestInfo) {
+    public ResponseEntity createContest(@ModelAttribute ContestInfo contestInfo) {
         Long id = contestService.save(contestInfo);
         return ResponseEntity.created(URI.create("/contests/" + id)).build();
     }
