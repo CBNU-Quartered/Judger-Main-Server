@@ -33,4 +33,8 @@ public class ContestService {
         Contest contest = contestRepository.findById(id).orElseThrow(NotFoundContestException::new);
         return contest.updateTo(contestInfo);
     }
+
+    public void deleteContest(Long id) {
+        contestRepository.deleteById(id);
+    }
 }

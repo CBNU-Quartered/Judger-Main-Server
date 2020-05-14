@@ -84,4 +84,20 @@ public class ContestAcceptanceTest {
                 .expectBody()
                 .jsonPath("$.name").isEqualTo("update contest");
     }
+
+    @Test
+    @DisplayName("콘테스트 삭제 테스트")
+    void deleteContest() {
+        webTestClient.delete()
+                .uri("/contests/" + contestId)
+                .exchange()
+                .expectStatus()
+                .isNoContent();
+
+        webTestClient.get()
+                .uri("/contests/" + contestId)
+                .exchange()
+                .expectStatus()
+                .isNotFound();
+    }
 }

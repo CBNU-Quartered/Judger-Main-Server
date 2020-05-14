@@ -1,6 +1,7 @@
 package com.qt.contest;
 
 import com.qt.domain.contest.dto.ContestInfo;
+import com.qt.problem.NotFoundProblemException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -32,5 +33,16 @@ public class ContestController {
     public ResponseEntity updateContest(@PathVariable Long id, @ModelAttribute ContestInfo contestInfo) {
         contestService.updateContest(id, contestInfo);
         return ResponseEntity.noContent().build();
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity deleteContest(@PathVariable Long id) {
+        contestService.deleteContest(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @ExceptionHandler
+    public ResponseEntity eventErrorHandler(NotFoundContestException exception) {
+        return ResponseEntity.notFound().build();
     }
 }
