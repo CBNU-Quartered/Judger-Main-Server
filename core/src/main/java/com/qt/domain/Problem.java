@@ -1,5 +1,6 @@
 package com.qt.domain;
 
+import com.qt.problem.dto.ProblemInfo;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
@@ -43,11 +44,11 @@ public class Problem {
         this.memoryLimit = memoryLimit;
     }
 
-    public Long updateTo(@NotNull String name, @NotNull String identifier, @NotNull Double timeLimit, @NotNull Double memoryLimit) {
-        this.name = name;
+    public Long updateTo(String identifier, ProblemInfo problemInfo) {
+        this.name = problemInfo.getName();
         this.identifier = identifier;
-        this.timeLimit = timeLimit;
-        this.memoryLimit = memoryLimit;
+        this.timeLimit = problemInfo.getTimeLimit();
+        this.memoryLimit = problemInfo.getMemoryLimit();
         return id;
     }
 }

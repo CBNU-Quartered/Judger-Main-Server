@@ -63,7 +63,7 @@ public class ProblemService {
         Problem problem = deleteFile(id);
 
         String identifier = saveFile(file);
-        return problem.updateTo(problemInfo.getName(), identifier, problem.getTimeLimit(), problemInfo.getMemoryLimit());
+        return problem.updateTo(identifier, problemInfo);
     }
 
     public void deleteProblem(Long id) throws IOException {
