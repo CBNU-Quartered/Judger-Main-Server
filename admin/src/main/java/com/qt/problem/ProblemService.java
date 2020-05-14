@@ -2,8 +2,7 @@ package com.qt.problem;
 
 import com.qt.domain.Problem;
 import com.qt.problem.dto.FileInfo;
-import com.qt.problem.dto.ProblemRequestInfo;
-import com.qt.problem.dto.ProblemResponseInfo;
+import com.qt.problem.dto.ProblemInfo;
 import org.modelmapper.ModelMapper;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
@@ -32,32 +31,42 @@ public class ProblemService {
         this.resourceLoader = resourceLoader;
     }
 
-    public Long save(ProblemRequestInfo problemRequestInfo, MultipartFile file) throws IOException {
+    public Long save(ProblemInfo problemInfo, MultipartFile file) throws IOException {
         String identifier = saveFile(file);
 
-        Problem problem = new Problem(file.getOriginalFilename(), identifier, problemRequestInfo.getTimeLimit(), problemRequestInfo.getMemoryLimit());
+        Problem problem = new Problem(problemInfo.getName(), identifier, problemInfo.getTimeLimit(), problemInfo.getMemoryLimit());
         return problemRepository.save(problem).getId();
     }
 
     @Transactional(readOnly = true)
-    public ProblemResponseInfo findById(Long id) {
+    public ProblemInfo findById(Long id) {
         return problemRepository
                 .findById(id)
-                .map(problem -> modelMapper.map(problem, ProblemResponseInfo.class))
+                .map(problem -> modelMapper.map(problem, ProblemInfo.class))
                 .orElseThrow(ProblemNotFoundException::new);
     }
 
+    @Transactional(readOnly = true)
     public FileInfo findFile(Long id) throws IOException {
         Problem problem = problemRepository.findById(id).orElseThrow(ProblemNotFoundException::new);
 
         String identifier = problem.getIdentifier();
-        Resource resource = resourceLoader.getResource(FILE_PATH +LOCAL_PROBLEM_STORAGE + identifier);
+        Resource resource = resourceLoader.getResource(FILE_PATH + LOCAL_PROBLEM_STORAGE + identifier);
 
         return FileInfo.builder()
                 .contentDisposition(problem.getName())
                 .contentLength(String.valueOf(resource.getFile().length()))
                 .resource(resource)
                 .build();
+    }
+
+    public Long updateProblem(Long id, ProblemInfo problemInfo, MultipartFile file) throws IOException {
+        Problem problem = problemRepository.findById(id).orElseThrow(ProblemNotFoundException::new);
+        Resource resource = resourceLoader.getResource(FILE_PATH + LOCAL_PROBLEM_STORAGE + problem.getIdentifier());
+        resource.getFile().delete();
+
+        String identifier = saveFile(file);
+        return problem.updateTo(problemInfo.getName(), identifier, problem.getTimeLimit(), problemInfo.getMemoryLimit());
     }
 
     private String saveFile(MultipartFile file) throws IOException {

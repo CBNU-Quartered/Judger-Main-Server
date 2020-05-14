@@ -7,19 +7,18 @@ import javax.validation.constraints.NotNull;
 @Setter
 @Getter
 @NoArgsConstructor
-public class ProblemResponseInfo {
+public class ProblemInfo {
 
     @NotNull
     private String name;
 
-    @NonNull
+    @NotNull
     private Double timeLimit;
 
-    @NonNull
+    @NotNull
     private Double memoryLimit;
 
-    @Builder
-    public ProblemResponseInfo(@NotNull String name, Double timeLimit, Double memoryLimit) {
+    public ProblemInfo(@NotNull String name, @NotNull Double timeLimit, @NotNull Double memoryLimit) {
         this.name = name;
         this.timeLimit = timeLimit;
         this.memoryLimit = memoryLimit;

@@ -1,23 +1,28 @@
 package com.qt.problem.dto;
 
-import lombok.*;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.springframework.core.io.Resource;
+
+import javax.validation.constraints.NotNull;
 
 @Setter
 @Getter
 @NoArgsConstructor
 public class FileInfo {
-    @NonNull
+    @NotNull
     private String contentDisposition;
 
-    @NonNull
+    @NotNull
     private String contentLength;
 
-    @NonNull
+    @NotNull
     private Resource resource;
 
     @Builder
-    public FileInfo(@NonNull String contentDisposition, @NonNull String contentLength, @NonNull Resource resource) {
+    public FileInfo(@NotNull String contentDisposition, @NotNull String contentLength, @NotNull Resource resource) {
         this.contentDisposition = contentDisposition;
         this.contentLength = contentLength;
         this.resource = resource;

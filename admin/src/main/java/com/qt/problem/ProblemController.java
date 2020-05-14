@@ -1,8 +1,7 @@
 package com.qt.problem;
 
 import com.qt.problem.dto.FileInfo;
-import com.qt.problem.dto.ProblemRequestInfo;
-import com.qt.problem.dto.ProblemResponseInfo;
+import com.qt.problem.dto.ProblemInfo;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -24,15 +23,15 @@ public class ProblemController {
     }
 
     @PostMapping
-    public ResponseEntity uploadFile(@ModelAttribute ProblemRequestInfo problemRequestInfo, @RequestParam MultipartFile file) throws IOException {
-        Long problemId = problemService.save(problemRequestInfo, file);
+    public ResponseEntity uploadFile(@ModelAttribute ProblemInfo problemInfo, @RequestParam MultipartFile file) throws IOException {
+        Long problemId = problemService.save(problemInfo, file);
         return ResponseEntity.created(URI.create("/problems/" + problemId)).build();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ProblemResponseInfo> showProblem(@PathVariable Long id) {
-        ProblemResponseInfo problemResponseInfo = problemService.findById(id);
-        return ResponseEntity.ok(problemResponseInfo);
+    public ResponseEntity<ProblemInfo> showProblem(@PathVariable Long id) {
+        ProblemInfo problemInfo = problemService.findById(id);
+        return ResponseEntity.ok(problemInfo);
     }
 
     @GetMapping("/{id}/files")
@@ -43,5 +42,11 @@ public class ProblemController {
                 .header(HttpHeaders.CONTENT_LENGTH, fileInfo.getContentLength())
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_PDF_VALUE)
                 .body(fileInfo.getResource());
+    }
+
+    @PostMapping("/{id}")
+    public ResponseEntity updateProblem(@PathVariable Long id, @ModelAttribute ProblemInfo problemInfo, @RequestParam MultipartFile file) throws IOException {
+        problemService.updateProblem(id, problemInfo, file);
+        return ResponseEntity.noContent().build();
     }
 }

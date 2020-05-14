@@ -27,17 +27,27 @@ public class Problem {
     @ManyToOne
     private Contest contest;
 
+    @NotNull
     private Double timeLimit;
 
+    @NotNull
     private Double memoryLimit;
 
     @CreatedDate
     private LocalDateTime createTime;
 
-    public Problem(@NotNull String name, @NotNull String identifier, Double timeLimit, Double memoryLimit) {
+    public Problem(@NotNull String name, @NotNull String identifier, @NotNull Double timeLimit, @NotNull Double memoryLimit) {
         this.name = name;
         this.identifier = identifier;
         this.timeLimit = timeLimit;
         this.memoryLimit = memoryLimit;
+    }
+
+    public Long updateTo(@NotNull String name, @NotNull String identifier, @NotNull Double timeLimit, @NotNull Double memoryLimit) {
+        this.name = name;
+        this.identifier = identifier;
+        this.timeLimit = timeLimit;
+        this.memoryLimit = memoryLimit;
+        return id;
     }
 }

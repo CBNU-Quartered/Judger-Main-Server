@@ -37,6 +37,7 @@ public class ProblemAcceptanceTest {
                 .uri("/problems")
                 .contentType(MediaType.MULTIPART_FORM_DATA)
                 .body(BodyInserters.fromMultipartData("file", file)
+                        .with("name", "test")
                         .with("timeLimit", 1d)
                         .with("memoryLimit", 1d))
                 .exchange()
@@ -56,7 +57,7 @@ public class ProblemAcceptanceTest {
                 .expectStatus()
                 .isOk()
                 .expectBody()
-                .jsonPath("$.name", "test.pdf");
+                .jsonPath("$.name", "test");
     }
 
     @Test
@@ -69,5 +70,35 @@ public class ProblemAcceptanceTest {
                 .expectStatus()
                 .isOk()
                 .expectHeader().valueMatches(HttpHeaders.CONTENT_DISPOSITION, "inline");
+    }
+
+    @Test
+    @DisplayName("문제, pdf 파일 수정 테스트")
+    void updateProblem() {
+        ByteArrayResource file = new ByteArrayResource(new byte[]{1, 2, 3}) {
+            @Override
+            public String getFilename() {
+                return "update.pdf";
+            }
+        };
+
+        webTestClient.post()
+                .uri("/problems/" + problemId)
+                .contentType(MediaType.MULTIPART_FORM_DATA)
+                .body(BodyInserters.fromMultipartData("file", file)
+                        .with("name", "update")
+                        .with("timeLimit", 3d)
+                        .with("memoryLimit", 3d))
+                .exchange()
+                .expectStatus()
+                .isNoContent();
+
+        webTestClient.get()
+                .uri("/problems/" + problemId)
+                .exchange()
+                .expectStatus()
+                .isOk()
+                .expectBody()
+                .jsonPath("$.name", "update");
     }
 }
