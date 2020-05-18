@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
@@ -26,7 +27,7 @@ public class ContestAcceptanceTest {
 
     @BeforeEach
     @DisplayName("콘테스트 등록 테스트")
-    void setUp() {
+    void createContest() {
         WebTestClient.ResponseSpec responseSpec = webTestClient.post()
                 .uri("/contests")
                 .contentType(MediaType.MULTIPART_FORM_DATA)
@@ -99,5 +100,48 @@ public class ContestAcceptanceTest {
                 .exchange()
                 .expectStatus()
                 .isNotFound();
+    }
+
+    @Test
+    @DisplayName("콘테스트에 문제 추가 테스트")
+    void registerProblem() {
+        //POST problem1을 저장
+        String problemId1 = createProblem("test1");
+
+        //POST problem2을 저장
+        String problemId2 = createProblem("test2");
+
+        //POST contest에 problem 추가
+        webTestClient.post()
+                .uri("/contests/" + contestId + "/problems")
+                .contentType(MediaType.MULTIPART_FORM_DATA)
+                .body(BodyInserters.fromFormData("problemIds", problemId1)
+                        .with("problemIds", problemId2))
+                .exchange()
+                .expectStatus()
+                .isNoContent();
+    }
+
+    private String createProblem(String test1) {
+        ByteArrayResource file1 = new ByteArrayResource(new byte[]{1, 2, 3}) {
+            @Override
+            public String getFilename() {
+                return "test.pdf";
+            }
+        };
+
+        WebTestClient.ResponseSpec responseSpec = webTestClient.post()
+                .uri("/problems")
+                .contentType(MediaType.MULTIPART_FORM_DATA)
+                .body(BodyInserters.fromMultipartData("file", file1)
+                        .with("name", test1)
+                        .with("timeLimit", 1d)
+                        .with("memoryLimit", 1d))
+                .exchange()
+                .expectStatus()
+                .isCreated()
+                .expectHeader().valueMatches("Location", "/problems/[1-9]+[0-9]*");
+
+        return AcceptanceTestUtils.extractDomainIdFromCreatedResourceAddress(responseSpec);
     }
 }

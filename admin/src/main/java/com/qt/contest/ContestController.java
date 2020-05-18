@@ -1,20 +1,22 @@
 package com.qt.contest;
 
 import com.qt.domain.contest.dto.ContestInfo;
-import com.qt.problem.NotFoundProblemException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
+import java.util.List;
 
 @RestController
 @RequestMapping("/contests")
 public class ContestController {
 
     private final ContestService contestService;
+    private final ContestProblemRegistrationService contestProblemRegistrationService;
 
-    public ContestController(ContestService contestService) {
+    public ContestController(ContestService contestService, ContestProblemRegistrationService contestProblemRegistrationService) {
         this.contestService = contestService;
+        this.contestProblemRegistrationService = contestProblemRegistrationService;
     }
 
     @PostMapping
@@ -38,6 +40,12 @@ public class ContestController {
     @DeleteMapping("/{id}")
     public ResponseEntity deleteContest(@PathVariable Long id) {
         contestService.deleteContest(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/{contestId}/problems")
+    public ResponseEntity addProblems(@PathVariable Long contestId, @RequestParam List<Long> problemIds) {
+        contestProblemRegistrationService.register(contestId, problemIds);
         return ResponseEntity.noContent().build();
     }
 
