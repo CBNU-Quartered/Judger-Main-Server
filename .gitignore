@@ -32,3 +32,4 @@ out/
 .vscode/
 
 TODO.txt
+admin/src/main/resources/static/problems/

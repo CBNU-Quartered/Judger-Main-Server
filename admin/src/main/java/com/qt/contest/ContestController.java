@@ -26,7 +26,7 @@ public class ContestController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ContestInfo> showContest(@PathVariable Long id) {
+    public ResponseEntity<ContestInfo> showContestInfo(@PathVariable Long id) {
         ContestInfo contestInfo = contestService.findById(id);
         return ResponseEntity.ok(contestInfo);
     }
@@ -44,7 +44,7 @@ public class ContestController {
     }
 
     @PostMapping("/{contestId}/problems")
-    public ResponseEntity addProblems(@PathVariable Long contestId, @RequestParam List<Long> problemIds) {
+    public ResponseEntity registerProblems(@PathVariable Long contestId, @RequestParam List<Long> problemIds) {
         contestProblemRegistrationService.register(contestId, problemIds);
         return ResponseEntity.noContent().build();
     }

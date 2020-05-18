@@ -50,7 +50,7 @@ public class ProblemService {
     public FileInfo findFile(Long id) throws IOException {
         Problem problem = problemRepository.findById(id).orElseThrow(NotFoundProblemException::new);
         String identifier = problem.getIdentifier();
-        Resource resource = resourceLoader.getResource(FILE_PATH + LOCAL_PROBLEM_STORAGE + identifier);
+        Resource resource = resourceLoader.getResource(FILE_PATH + LOCAL_PROBLEM_STORAGE + identifier + "/" + problem.getName());
 
         return FileInfo.builder()
                 .contentDisposition(problem.getName())
@@ -73,8 +73,10 @@ public class ProblemService {
 
     private String saveFile(MultipartFile file) throws IOException {
         String identifier = UUID.randomUUID().toString();
+        String directory = LOCAL_PROBLEM_STORAGE + identifier;
+        new File(directory).mkdir();
 
-        File dest = new File(LOCAL_PROBLEM_STORAGE + identifier);
+        File dest = new File(directory + "/" + file.getOriginalFilename());
         file.transferTo(dest);
         return identifier;
     }

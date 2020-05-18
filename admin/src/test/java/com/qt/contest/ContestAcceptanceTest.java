@@ -111,7 +111,7 @@ public class ContestAcceptanceTest {
         //POST problem2을 저장
         String problemId2 = createProblem("test2");
 
-        //POST contest에 problem 추가
+        //POST contest에 problem 2개 추가
         webTestClient.post()
                 .uri("/contests/" + contestId + "/problems")
                 .contentType(MediaType.MULTIPART_FORM_DATA)
