@@ -44,7 +44,7 @@ public class ProblemService {
     }
 
     public Long save(ProblemRequestInfo problemRequestInfo, MultipartFile file) throws IOException {
-        String identifier = saveProblemFile(file);
+        String identifier = saveProblemFile(file, problemRequestInfo.getName());
 
         Problem problem = new Problem(problemRequestInfo.getName(), identifier, problemRequestInfo.getTimeLimit(), problemRequestInfo.getMemoryLimit());
         return problemRepository.save(problem).getId();
@@ -74,7 +74,7 @@ public class ProblemService {
     public Long updateProblem(Long id, ProblemRequestInfo problemRequestInfo, MultipartFile file) throws IOException {
         Problem problem = deleteProblemFile(id);
 
-        String identifier = saveProblemFile(file);
+        String identifier = saveProblemFile(file, problemRequestInfo.getName());
         return problem.updateTo(identifier, problemRequestInfo);
     }
 
@@ -102,12 +102,12 @@ public class ProblemService {
         }
     }
 
-    private String saveProblemFile(MultipartFile file) throws IOException {
+    private String saveProblemFile(MultipartFile file, String name) throws IOException {
         String identifier = UUID.randomUUID().toString();
         String directory = LOCAL_PROBLEM_STORAGE_PATH + identifier;
         new File(directory).mkdir();
 
-        File dest = new File(directory + "/" + file.getOriginalFilename());
+        File dest = new File(directory + "/" + name);
         file.transferTo(dest);
         return identifier;
     }
