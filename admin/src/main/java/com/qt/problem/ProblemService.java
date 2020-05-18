@@ -14,12 +14,13 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
 public class ProblemService {
-
     private static final String LOCAL_PROBLEM_STORAGE_PATH = "/Users/hyogeon/IdeaProjects/judger-main-server/admin/src/main/resources/static/problems/";
+
     private static final String FILE_PATH = "file:";
     private static final String TEST_CASE_PATH = "/tc";
     private static final String TEST_CASE_INPUT_PATH = "/in";
@@ -33,6 +34,12 @@ public class ProblemService {
         this.problemRepository = problemRepository;
         this.modelMapper = modelMapper;
         this.resourceLoader = resourceLoader;
+    }
+
+    public List<ProblemInfo> findAll() {
+        return problemRepository.findAll().stream()
+                .map(problem -> modelMapper.map(problem, ProblemInfo.class))
+                .collect(Collectors.toList());
     }
 
     public Long save(ProblemInfo problemInfo, MultipartFile file) throws IOException {

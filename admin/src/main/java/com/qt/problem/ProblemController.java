@@ -23,6 +23,12 @@ public class ProblemController {
         this.problemService = problemService;
     }
 
+    @GetMapping
+    public ResponseEntity<List<ProblemInfo>> showAllProblems() {
+        List<ProblemInfo> problemInfos = problemService.findAll();
+        return ResponseEntity.ok(problemInfos);
+    }
+
     @PostMapping
     public ResponseEntity createProblem(@ModelAttribute ProblemInfo problemInfo, @RequestParam MultipartFile file) throws IOException {
         Long problemId = problemService.save(problemInfo, file);

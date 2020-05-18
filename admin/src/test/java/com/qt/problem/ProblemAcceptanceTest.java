@@ -14,6 +14,8 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
 
+import static org.hamcrest.Matchers.greaterThan;
+
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class ProblemAcceptanceTest {
@@ -41,6 +43,18 @@ public class ProblemAcceptanceTest {
                 .expectHeader().valueMatches("Location", "/problems/[1-9]+[0-9]*");
 
         problemId = AcceptanceTestUtils.extractDomainIdFromCreatedResourceAddress(responseSpec);
+    }
+
+    @Test
+    @DisplayName("전체 문제 정보 조회 테스트")
+    void showAllProblems() {
+        webTestClient.get()
+                .uri("/problems")
+                .exchange()
+                .expectStatus()
+                .isOk()
+                .expectBody()
+                .jsonPath("$.length", greaterThan(1));
     }
 
     @Test
