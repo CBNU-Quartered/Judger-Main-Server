@@ -11,6 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.net.URI;
+import java.util.List;
 
 @RestController
 @RequestMapping("/problems")
@@ -45,7 +46,7 @@ public class ProblemController {
     }
 
     @PostMapping("/{id}")
-    public ResponseEntity deleteProblem(@PathVariable Long id, @ModelAttribute ProblemInfo problemInfo, @RequestParam MultipartFile file) throws IOException {
+    public ResponseEntity updateProblem(@PathVariable Long id, @ModelAttribute ProblemInfo problemInfo, @RequestParam MultipartFile file) throws IOException {
         problemService.updateProblem(id, problemInfo, file);
         return ResponseEntity.noContent().build();
     }
@@ -53,6 +54,12 @@ public class ProblemController {
     @DeleteMapping("/{id}")
     public ResponseEntity deleteProblem(@PathVariable Long id) throws IOException {
         problemService.deleteProblem(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/{id}/testcase")
+    public ResponseEntity registerTestcase(@PathVariable Long id, @RequestParam List<MultipartFile> in, @RequestParam List<MultipartFile> out) throws IOException {
+        problemService.registerTestcase(id, in, out);
         return ResponseEntity.noContent().build();
     }
 

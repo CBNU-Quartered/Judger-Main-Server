@@ -12,14 +12,18 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 import java.util.UUID;
 
 @Service
 @Transactional
 public class ProblemService {
 
-    private static final String LOCAL_PROBLEM_STORAGE = "/Users/hyogeon/IdeaProjects/judger-main-server/admin/src/main/resources/static/problems/";
+    private static final String LOCAL_PROBLEM_STORAGE_PATH = "/Users/hyogeon/IdeaProjects/judger-main-server/admin/src/main/resources/static/problems/";
     private static final String FILE_PATH = "file:";
+    private static final String TEST_CASE_PATH = "/tc";
+    private static final String TEST_CASE_INPUT_PATH = "/in";
+    private static final String TEST_CASE_OUTPUT_PATH = "/out";
 
     private final ProblemRepository problemRepository;
     private final ModelMapper modelMapper;
@@ -32,7 +36,7 @@ public class ProblemService {
     }
 
     public Long save(ProblemInfo problemInfo, MultipartFile file) throws IOException {
-        String identifier = saveFile(file);
+        String identifier = saveProblemFile(file);
 
         Problem problem = new Problem(problemInfo.getName(), identifier, problemInfo.getTimeLimit(), problemInfo.getMemoryLimit());
         return problemRepository.save(problem).getId();
@@ -50,7 +54,7 @@ public class ProblemService {
     public FileInfo findFile(Long id) throws IOException {
         Problem problem = problemRepository.findById(id).orElseThrow(NotFoundProblemException::new);
         String identifier = problem.getIdentifier();
-        Resource resource = resourceLoader.getResource(FILE_PATH + LOCAL_PROBLEM_STORAGE + identifier + "/" + problem.getName());
+        Resource resource = resourceLoader.getResource(FILE_PATH + LOCAL_PROBLEM_STORAGE_PATH + identifier + "/" + problem.getName());
 
         return FileInfo.builder()
                 .contentDisposition(problem.getName())
@@ -60,20 +64,39 @@ public class ProblemService {
     }
 
     public Long updateProblem(Long id, ProblemInfo problemInfo, MultipartFile file) throws IOException {
-        Problem problem = deleteFile(id);
+        Problem problem = deleteProblemFile(id);
 
-        String identifier = saveFile(file);
+        String identifier = saveProblemFile(file);
         return problem.updateTo(identifier, problemInfo);
     }
 
     public void deleteProblem(Long id) throws IOException {
-        Problem problem = deleteFile(id);
+        Problem problem = deleteProblemFile(id);
         problemRepository.delete(problem);
     }
 
-    private String saveFile(MultipartFile file) throws IOException {
+    public void registerTestcase(Long id, List<MultipartFile> in, List<MultipartFile> out) throws IOException {
+        String identifier = problemRepository.findById(id).orElseThrow(NotFoundProblemException::new).getIdentifier();
+        String testcaseDirectory = LOCAL_PROBLEM_STORAGE_PATH + identifier + TEST_CASE_PATH;
+        new File(testcaseDirectory).mkdir();
+
+        String inputDirectory = testcaseDirectory + TEST_CASE_INPUT_PATH;
+        String outputDirectory = testcaseDirectory + TEST_CASE_OUTPUT_PATH;
+        new File(inputDirectory).mkdir();
+        new File(outputDirectory).mkdir();
+
+        for (MultipartFile input : in) {
+            input.transferTo(new File(inputDirectory + "/" + input.getOriginalFilename()));
+        }
+
+        for (MultipartFile output : out) {
+            output.transferTo(new File(outputDirectory + "/" + output.getOriginalFilename()));
+        }
+    }
+
+    private String saveProblemFile(MultipartFile file) throws IOException {
         String identifier = UUID.randomUUID().toString();
-        String directory = LOCAL_PROBLEM_STORAGE + identifier;
+        String directory = LOCAL_PROBLEM_STORAGE_PATH + identifier;
         new File(directory).mkdir();
 
         File dest = new File(directory + "/" + file.getOriginalFilename());
@@ -81,9 +104,9 @@ public class ProblemService {
         return identifier;
     }
 
-    private Problem deleteFile(Long id) throws IOException {
+    private Problem deleteProblemFile(Long id) throws IOException {
         Problem problem = problemRepository.findById(id).orElseThrow(NotFoundProblemException::new);
-        Resource resource = resourceLoader.getResource(FILE_PATH + LOCAL_PROBLEM_STORAGE + problem.getIdentifier());
+        Resource resource = resourceLoader.getResource(FILE_PATH + LOCAL_PROBLEM_STORAGE_PATH + problem.getIdentifier());
         resource.getFile().delete();
         return problem;
     }

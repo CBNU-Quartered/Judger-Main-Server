@@ -1,7 +1,6 @@
 package com.qt.problem;
 
 import com.qt.AcceptanceTestUtils;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -27,12 +26,7 @@ public class ProblemAcceptanceTest {
     @BeforeEach
     @DisplayName("pdf 파일, 문제 저장 테스트")
     void createProblem() {
-        ByteArrayResource file = new ByteArrayResource(new byte[]{1, 2, 3}) {
-            @Override
-            public String getFilename() {
-                return "test.pdf";
-            }
-        };
+        ByteArrayResource file = createFile("test.pdf");
 
         WebTestClient.ResponseSpec responseSpec = webTestClient.post()
                 .uri("/problems")
@@ -76,12 +70,7 @@ public class ProblemAcceptanceTest {
     @Test
     @DisplayName("문제, pdf 파일 수정 테스트")
     void updateProblem() {
-        ByteArrayResource file = new ByteArrayResource(new byte[]{1, 2, 3}) {
-            @Override
-            public String getFilename() {
-                return "update.pdf";
-            }
-        };
+        ByteArrayResource file = createFile("update.pdf");
 
         webTestClient.post()
                 .uri("/problems/" + problemId)
@@ -103,7 +92,7 @@ public class ProblemAcceptanceTest {
                 .jsonPath("$.name", "update");
     }
 
-    @AfterEach
+    @Test
     @DisplayName("문제, pdf 파일 삭제 테스트")
     void deleteProblem() {
         webTestClient.delete()
@@ -117,5 +106,34 @@ public class ProblemAcceptanceTest {
                 .exchange()
                 .expectStatus()
                 .isNotFound();
+    }
+
+    @Test
+    @DisplayName("테스트 케이스 등록 테스트")
+    void registerTestcase() {
+        ByteArrayResource inputFile1 = createFile("1.in");
+        ByteArrayResource inputFile2 = createFile("2.in");
+        ByteArrayResource outputFile1 = createFile("1.out");
+        ByteArrayResource outputFile2 = createFile("2.out");
+
+        webTestClient.post()
+                .uri("/problems/" + problemId + "/testcase")
+                .contentType(MediaType.MULTIPART_FORM_DATA)
+                .body(BodyInserters.fromMultipartData("in", inputFile1)
+                        .with("out", outputFile1)
+                        .with("in", inputFile2)
+                        .with("out", outputFile2))
+                .exchange()
+                .expectStatus()
+                .isNoContent();
+    }
+
+    private ByteArrayResource createFile(String name) {
+        return new ByteArrayResource(new byte[]{1, 2, 3}) {
+            @Override
+            public String getFilename() {
+                return name;
+            }
+        };
     }
 }
