@@ -2,7 +2,8 @@ package com.qt.problem;
 
 import com.qt.domain.problem.Problem;
 import com.qt.domain.problem.dto.FileInfo;
-import com.qt.domain.problem.dto.ProblemInfo;
+import com.qt.domain.problem.dto.ProblemRequestInfo;
+import com.qt.domain.problem.dto.ProblemResponseInfo;
 import org.modelmapper.ModelMapper;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
@@ -36,24 +37,24 @@ public class ProblemService {
         this.resourceLoader = resourceLoader;
     }
 
-    public List<ProblemInfo> findAll() {
+    public List<ProblemResponseInfo> findAll() {
         return problemRepository.findAll().stream()
-                .map(problem -> modelMapper.map(problem, ProblemInfo.class))
+                .map(problem -> modelMapper.map(problem, ProblemResponseInfo.class))
                 .collect(Collectors.toList());
     }
 
-    public Long save(ProblemInfo problemInfo, MultipartFile file) throws IOException {
+    public Long save(ProblemRequestInfo problemRequestInfo, MultipartFile file) throws IOException {
         String identifier = saveProblemFile(file);
 
-        Problem problem = new Problem(problemInfo.getName(), identifier, problemInfo.getTimeLimit(), problemInfo.getMemoryLimit());
+        Problem problem = new Problem(problemRequestInfo.getName(), identifier, problemRequestInfo.getTimeLimit(), problemRequestInfo.getMemoryLimit());
         return problemRepository.save(problem).getId();
     }
 
     @Transactional(readOnly = true)
-    public ProblemInfo findById(Long id) {
+    public ProblemResponseInfo findById(Long id) {
         return problemRepository
                 .findById(id)
-                .map(problem -> modelMapper.map(problem, ProblemInfo.class))
+                .map(problem -> modelMapper.map(problem, ProblemResponseInfo.class))
                 .orElseThrow(NotFoundProblemException::new);
     }
 
@@ -70,11 +71,11 @@ public class ProblemService {
                 .build();
     }
 
-    public Long updateProblem(Long id, ProblemInfo problemInfo, MultipartFile file) throws IOException {
+    public Long updateProblem(Long id, ProblemRequestInfo problemRequestInfo, MultipartFile file) throws IOException {
         Problem problem = deleteProblemFile(id);
 
         String identifier = saveProblemFile(file);
-        return problem.updateTo(identifier, problemInfo);
+        return problem.updateTo(identifier, problemRequestInfo);
     }
 
     public void deleteProblem(Long id) throws IOException {

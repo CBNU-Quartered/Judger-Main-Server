@@ -1,7 +1,8 @@
 package com.qt.problem;
 
 import com.qt.domain.problem.dto.FileInfo;
-import com.qt.domain.problem.dto.ProblemInfo;
+import com.qt.domain.problem.dto.ProblemRequestInfo;
+import com.qt.domain.problem.dto.ProblemResponseInfo;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -24,21 +25,21 @@ public class ProblemController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ProblemInfo>> showAllProblems() {
-        List<ProblemInfo> problemInfos = problemService.findAll();
-        return ResponseEntity.ok(problemInfos);
+    public ResponseEntity<List<ProblemResponseInfo>> showAllProblems() {
+        List<ProblemResponseInfo> problemResponseInfos = problemService.findAll();
+        return ResponseEntity.ok(problemResponseInfos);
     }
 
     @PostMapping
-    public ResponseEntity createProblem(@ModelAttribute ProblemInfo problemInfo, @RequestParam MultipartFile file) throws IOException {
-        Long problemId = problemService.save(problemInfo, file);
+    public ResponseEntity createProblem(@ModelAttribute ProblemRequestInfo problemRequestInfo, @RequestParam MultipartFile file) throws IOException {
+        Long problemId = problemService.save(problemRequestInfo, file);
         return ResponseEntity.created(URI.create("/problems/" + problemId)).build();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ProblemInfo> showProblem(@PathVariable Long id) {
-        ProblemInfo problemInfo = problemService.findById(id);
-        return ResponseEntity.ok(problemInfo);
+    public ResponseEntity<ProblemResponseInfo> showProblem(@PathVariable Long id) {
+        ProblemResponseInfo problemResponseInfo = problemService.findById(id);
+        return ResponseEntity.ok(problemResponseInfo);
     }
 
     @GetMapping("/{id}/files")
@@ -52,8 +53,8 @@ public class ProblemController {
     }
 
     @PostMapping("/{id}")
-    public ResponseEntity updateProblem(@PathVariable Long id, @ModelAttribute ProblemInfo problemInfo, @RequestParam MultipartFile file) throws IOException {
-        problemService.updateProblem(id, problemInfo, file);
+    public ResponseEntity updateProblem(@PathVariable Long id, @ModelAttribute ProblemRequestInfo problemRequestInfo, @RequestParam MultipartFile file) throws IOException {
+        problemService.updateProblem(id, problemRequestInfo, file);
         return ResponseEntity.noContent().build();
     }
 
