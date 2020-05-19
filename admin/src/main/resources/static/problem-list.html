@@ -5,7 +5,12 @@
     <title>asd</title>
 </head>
 <body>
-    <div id="problems"></div>
+    <table border="1">
+        <th>이름</th>
+        <th>시간 제한</th>
+        <th>메모리 제한</th>
+        <tbody id="problems"></tbody>
+    </table>
     <form action="/problems" method="post" enctype="multipart/form-data">
         Select image to upload:
         <input type="file" name="file">
@@ -20,14 +25,14 @@
             axios.get('/problems')
                 .then(function(response){
                     const problems = response.data;
-                    var output="<ul>";
-                    for (var i in response.data) {
-                        console.log(response.data);
-                        output+="<li>" + problems[i].name + " " + problems[i].timeLimit + " " + problems[i].memoryLimit + "</li>";
+                    for (const i in response.data) {
+                        const pr = document.getElementById("problems");
+                        const row = pr.insertRow(pr.rows.length)
+                        row.insertCell(0).innerHTML = "<a href=\"/problems/" + problems[i].id + "/files\">" + problems[i].name + "</a>"
+                        row.insertCell(1).innerHTML = problems[i].timeLimit;
+                        row.insertCell(1).innerHTML = problems[i].memoryLimit;
                     }
-                    output+="</ul>";
-                    document.getElementById("problems").innerHTML=output;
-                })};
+                })};;
 
         fetchProblems();
     </script>
