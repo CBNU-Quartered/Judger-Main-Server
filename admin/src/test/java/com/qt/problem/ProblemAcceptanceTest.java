@@ -123,8 +123,8 @@ public class ProblemAcceptanceTest {
     }
 
     @Test
-    @DisplayName("테스트 케이스 등록 테스트")
-    void registerTestcase() {
+    @DisplayName("테스트 케이스 업로드 테스트")
+    void uploadTestcases() {
         ByteArrayResource inputFile1 = createFile("1.in");
         ByteArrayResource inputFile2 = createFile("2.in");
         ByteArrayResource outputFile1 = createFile("1.out");
