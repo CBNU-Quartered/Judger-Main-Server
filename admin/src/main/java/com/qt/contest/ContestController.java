@@ -1,5 +1,6 @@
 package com.qt.contest;
 
+import com.qt.contest.regist.ContestProblemRegistrationService;
 import com.qt.domain.contest.dto.ContestInfo;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,11 +13,9 @@ import java.util.List;
 public class ContestController {
 
     private final ContestService contestService;
-    private final ContestProblemRegistrationService contestProblemRegistrationService;
 
-    public ContestController(ContestService contestService, ContestProblemRegistrationService contestProblemRegistrationService) {
+    public ContestController(ContestService contestService) {
         this.contestService = contestService;
-        this.contestProblemRegistrationService = contestProblemRegistrationService;
     }
 
     @PostMapping
@@ -25,7 +24,7 @@ public class ContestController {
         return ResponseEntity.created(URI.create("/contests/" + id)).build();
     }
 
-    @GetMapping()
+    @GetMapping
     public ResponseEntity<List<ContestInfo>> showAllContestInfo() {
         List<ContestInfo> contestInfos = contestService.findAll();
         return ResponseEntity.ok(contestInfos);
@@ -46,12 +45,6 @@ public class ContestController {
     @DeleteMapping("/{id}")
     public ResponseEntity deleteContest(@PathVariable Long id) {
         contestService.deleteContest(id);
-        return ResponseEntity.noContent().build();
-    }
-
-    @PostMapping("/{contestId}/problems")
-    public ResponseEntity registerProblems(@PathVariable Long contestId, @RequestParam List<Long> problemIds) {
-        contestProblemRegistrationService.register(contestId, problemIds);
         return ResponseEntity.noContent().build();
     }
 
