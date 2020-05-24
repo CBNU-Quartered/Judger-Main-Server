@@ -18,11 +18,9 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class ContestApplication {
 
-    public ContestApplication(@NotNull Contest contest, @NotNull User user, @NotNull LocalDateTime createTime, @NotNull Boolean isApproved) {
+    public ContestApplication(@NotNull Contest contest, @NotNull User user) {
         this.contest = contest;
         this.user = user;
-        this.createTime = createTime;
-        this.isApproved = isApproved;
     }
 
     @Id
@@ -38,7 +36,6 @@ public class ContestApplication {
     @ManyToOne
     private User user;
 
-    @NotNull
     @CreatedDate
     private LocalDateTime createTime;
 
