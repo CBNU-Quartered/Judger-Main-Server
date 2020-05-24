@@ -1,4 +1,4 @@
-package com.qt.domain.student;
+package com.qt.domain.user;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,7 +13,7 @@ import javax.validation.constraints.NotNull;
 @Entity
 @Getter
 @NoArgsConstructor
-public class Student {
+public class User {
 
     @Id
     @GeneratedValue
@@ -22,7 +22,7 @@ public class Student {
     private String universityCode;
     @NotNull
     @Column(unique = true)
-    private Long studentId;
+    private String userId;
     @NotNull
     private String name;
     @NotNull
@@ -31,9 +31,9 @@ public class Student {
     @NotNull
     private String phoneNumber;
 
-    public Student(@NotNull String universityCode, @NotNull Long studentId, @NotNull String name, @NotNull @Email String email, @NotNull String phoneNumber) {
+    public User(@NotNull String universityCode, @NotNull String userId, @NotNull String name, @NotNull @Email String email, @NotNull String phoneNumber) {
         this.universityCode = universityCode;
-        this.studentId = studentId;
+        this.userId = userId;
         this.name = name;
         this.email = email;
         this.phoneNumber = phoneNumber;

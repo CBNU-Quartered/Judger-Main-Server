@@ -1,6 +1,6 @@
 package com.qt.domain.question;
 
-import com.qt.domain.student.Student;
+import com.qt.domain.user.User;
 import com.qt.domain.contest.Contest;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -26,7 +26,7 @@ public class Question {
 
     @CreatedBy
     @ManyToOne
-    private Student student;
+    private User user;
 
     @NotNull
     private Integer problemNumber;
@@ -41,9 +41,9 @@ public class Question {
     @CreatedDate
     private LocalDateTime createTime;
 
-    public Question(@NotNull Contest contest, Student student, @NotNull Integer problemNumber, @NotNull String content, String response, LocalDateTime createTime) {
+    public Question(@NotNull Contest contest, User user, @NotNull Integer problemNumber, @NotNull String content, String response, LocalDateTime createTime) {
         this.contest = contest;
-        this.student = student;
+        this.user = user;
         this.problemNumber = problemNumber;
         this.content = content;
         this.response = response;

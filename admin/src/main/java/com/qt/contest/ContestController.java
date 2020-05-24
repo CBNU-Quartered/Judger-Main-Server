@@ -25,6 +25,12 @@ public class ContestController {
         return ResponseEntity.created(URI.create("/contests/" + id)).build();
     }
 
+    @GetMapping()
+    public ResponseEntity<List<ContestInfo>> showAllContestInfo() {
+        List<ContestInfo> contestInfos = contestService.findAll();
+        return ResponseEntity.ok(contestInfos);
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<ContestInfo> showContestInfo(@PathVariable Long id) {
         ContestInfo contestInfo = contestService.findById(id);

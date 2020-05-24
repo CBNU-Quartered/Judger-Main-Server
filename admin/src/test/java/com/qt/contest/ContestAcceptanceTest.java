@@ -15,6 +15,8 @@ import org.springframework.web.reactive.function.BodyInserters;
 
 import java.time.LocalDateTime;
 
+import static org.hamcrest.Matchers.greaterThan;
+
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -45,6 +47,18 @@ public class ContestAcceptanceTest {
                 .expectHeader().valueMatches("location", "/contests/[1-9]+[0-9]*");
 
         contestId = AcceptanceTestUtils.extractDomainIdFromCreatedResourceAddress(responseSpec);
+    }
+
+    @Test
+    @DisplayName("콘테스트 전체 조회 테스트")
+    void showAllContest() {
+        webTestClient.get()
+                .uri("/contests")
+                .exchange()
+                .expectStatus()
+                .isOk()
+                .expectBody()
+                .jsonPath("$.length()", greaterThan(1));
     }
 
     @Test

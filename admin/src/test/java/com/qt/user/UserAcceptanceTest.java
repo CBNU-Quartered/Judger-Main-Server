@@ -1,6 +1,6 @@
-package com.qt.student;
+package com.qt.user;
 
-import com.qt.domain.student.dto.StudentInfo;
+import com.qt.domain.user.dto.UserInfo;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -11,39 +11,39 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class StudentAcceptanceTest {
+class UserAcceptanceTest {
 
     @Autowired
     private WebTestClient webTestClient;
 
     @Autowired
-    private StudentRepository studentRepository;
+    private UserRepository userRepository;
 
 
     @Test
     @DisplayName("모든 학생 조회")
-    void findAllStudents() {
-        StudentInfo studentInfo1 = StudentInfo.builder()
-                .studentId(2014l)
+    void findAllUsers() {
+        UserInfo userInfo1 = UserInfo.builder()
+                .userId("2014")
                 .name("s1")
                 .email("a@b.c")
                 .phoneNumber("1234")
                 .universityCode("cbnu")
                 .build();
 
-        StudentInfo studentInfo2 = StudentInfo.builder()
-                .studentId(2015l)
+        UserInfo userInfo2 = UserInfo.builder()
+                .userId("2015")
                 .name("s2")
                 .email("a@b.c")
                 .phoneNumber("1234")
                 .universityCode("cbnu")
                 .build();
 
-        studentRepository.save(studentInfo1.toEntity());
-        studentRepository.save(studentInfo2.toEntity());
+        userRepository.save(userInfo1.toEntity());
+        userRepository.save(userInfo2.toEntity());
 
         webTestClient.get()
-                .uri("/students")
+                .uri("/users")
                 .exchange()
                 .expectStatus()
                 .isOk()
