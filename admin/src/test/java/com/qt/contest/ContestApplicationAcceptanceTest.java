@@ -31,10 +31,10 @@ public class ContestApplicationAcceptanceTest {
     private Long userId;
 
     @BeforeEach
+    @DisplayName("콘테스트 신청 테스트")
     void setUp() {
         User user = new User("2014041082", "hgkim", "kimhyogeon", "men1210@hanmail.net", "010-9309-3706");
         userId = userRepository.save(user).getId();
-
 
         WebTestClient.ResponseSpec responseSpec = webTestClient.post()
                 .uri("/contests")
@@ -53,16 +53,24 @@ public class ContestApplicationAcceptanceTest {
                 .expectHeader().valueMatches("location", "/contests/[1-9]+[0-9]*");
 
         contestId = AcceptanceTestUtils.extractDomainIdFromCreatedResourceAddress(responseSpec);
-    }
 
-    @Test
-    @DisplayName("콘테스트 신청 테스트")
-    void applyContest() {
         webTestClient.post()
                 .uri("/contests/" + contestId + "/apply/" + userId)
                 .exchange()
                 .expectStatus()
                 .isCreated()
                 .expectHeader().valueMatches("location", "/contests");
+    }
+
+    @Test
+    @DisplayName("콘테스트 신청 조회 테스트")
+    void showContestApplications() {
+        webTestClient.get()
+                .uri("/contests/" + contestId + "/apply")
+                .exchange()
+                .expectStatus()
+                .isOk()
+                .expectBody()
+                .jsonPath("$.length()").isEqualTo(1);
     }
 }
