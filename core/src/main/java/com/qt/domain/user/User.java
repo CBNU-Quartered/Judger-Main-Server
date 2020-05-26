@@ -18,16 +18,21 @@ public class User {
     @Id
     @GeneratedValue
     private Long id;
+
     @NotNull
     private String universityCode;
+
     @NotNull
     @Column(unique = true)
     private String userId;
+
     @NotNull
     private String name;
+
     @NotNull
     @Email
     private String email;
+
     @NotNull
     private String phoneNumber;
 

@@ -1,6 +1,7 @@
 package com.qt.contest;
 
 import com.qt.AcceptanceTestUtils;
+import com.qt.contest.apply.ContestApplicationRepository;
 import com.qt.domain.user.User;
 import com.qt.user.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -16,6 +17,8 @@ import org.springframework.web.reactive.function.BodyInserters;
 
 import java.time.LocalDateTime;
 
+import static org.hamcrest.Matchers.greaterThan;
+
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class ContestApplicationAcceptanceTest {
@@ -26,17 +29,26 @@ public class ContestApplicationAcceptanceTest {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private ContestApplicationRepository contestApplicationRepository;
+
     private String contestId;
 
-    private Long userId;
+    private String userId;
+
+    private String contestApplicationId;
+
+    private static int id = -1;
 
     @BeforeEach
     @DisplayName("콘테스트 신청 테스트")
     void setUp() {
-        User user = new User("2014041082", "hgkim", "kimhyogeon", "men1210@hanmail.net", "010-9309-3706");
-        userId = userRepository.save(user).getId();
+        id++;
+        User user = new User("2014", String.valueOf(id), "kimhyogeon", "men1210@hanmail.net", "010-9309-3706");
+        userId = String.valueOf(userRepository.save(user).getId());
 
-        WebTestClient.ResponseSpec responseSpec = webTestClient.post()
+        //콘테스트 생성
+        WebTestClient.ResponseSpec responseSpec1 = webTestClient.post()
                 .uri("/contests")
                 .contentType(MediaType.MULTIPART_FORM_DATA)
                 .body(BodyInserters.fromFormData("name", "contest1")
@@ -52,18 +64,21 @@ public class ContestApplicationAcceptanceTest {
                 .isCreated()
                 .expectHeader().valueMatches("location", "/contests/[1-9]+[0-9]*");
 
-        contestId = AcceptanceTestUtils.extractDomainIdFromCreatedResourceAddress(responseSpec);
+        contestId = AcceptanceTestUtils.extractDomainIdFromCreatedResourceAddress(responseSpec1);
 
-        webTestClient.post()
+        //콘테스트 신청
+        WebTestClient.ResponseSpec responseSpec2 = webTestClient.post()
                 .uri("/contests/" + contestId + "/apply/" + userId)
                 .exchange()
                 .expectStatus()
                 .isCreated()
-                .expectHeader().valueMatches("location", "/contests");
+                .expectHeader().valueMatches("location", "/contests/apply/[1-9]+[0-9]*");
+
+        contestApplicationId = AcceptanceTestUtils.extractDomainIdFromCreatedResourceAddress(responseSpec2);
     }
 
     @Test
-    @DisplayName("콘테스트 신청 조회 테스트")
+    @DisplayName("콘테스트 신청 전체 조회 테스트")
     void showContestApplications() {
         webTestClient.get()
                 .uri("/contests/" + contestId + "/apply")
@@ -71,6 +86,24 @@ public class ContestApplicationAcceptanceTest {
                 .expectStatus()
                 .isOk()
                 .expectBody()
-                .jsonPath("$.length()").isEqualTo(1);
+                .jsonPath("$.length()", greaterThan(1));
+    }
+
+    @Test
+    @DisplayName("콘테스트 신청 승인/취소 후 단일 조회 테스트")
+    void changeApproveStatus() {
+        webTestClient.post()
+                .uri("/contests/apply/approve/" + contestApplicationId)
+                .exchange()
+                .expectStatus()
+                .isNoContent();
+
+        webTestClient.get()
+                .uri("/contests/apply/" + contestApplicationId)
+                .exchange()
+                .expectStatus()
+                .isOk()
+                .expectBody()
+                .jsonPath("$.isApproved").isEqualTo(true);
     }
 }

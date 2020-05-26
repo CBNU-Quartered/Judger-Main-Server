@@ -38,6 +38,17 @@ public class ContestApplicationService {
         return contestApplicationRepository.save(new ContestApplication(contest, user)).getId();
     }
 
+    @Transactional(readOnly = true)
+    public ContestApplicationInfo findByContestApplicationId(Long contestApplicationId) {
+        ContestApplication contestApplication = contestApplicationRepository.findById(contestApplicationId).orElseThrow(NotFoundContestApplicationException::new);
+        return ContestApplicationInfo.builder()
+                .id(contestApplication.getId())
+                .contestInfo(modelMapper.map(contestApplication.getContest(), ContestInfo.class))
+                .userInfo(modelMapper.map(contestApplication.getUser(), UserInfo.class))
+                .isApproved(contestApplication.getIsApproved()).build();
+    }
+
+    @Transactional(readOnly = true)
     public List<ContestApplicationInfo> findAllByContestId(Long contestId) {
         return contestApplicationRepository.findAllByContestId(contestId).stream()
                 .map(contestApplication -> ContestApplicationInfo.builder()
@@ -46,5 +57,10 @@ public class ContestApplicationService {
                         .userInfo(modelMapper.map(contestApplication.getUser(), UserInfo.class))
                         .isApproved(contestApplication.getIsApproved()).build())
                 .collect(Collectors.toList());
+    }
+
+    public void changeApproveStatus(Long contestApplicationId) {
+        ContestApplication contestApplication = contestApplicationRepository.findById(contestApplicationId).orElseThrow(NotFoundContestApplicationException::new);
+        contestApplication.changeApproveStatus();
     }
 }

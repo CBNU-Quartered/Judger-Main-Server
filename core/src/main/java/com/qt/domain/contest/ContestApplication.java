@@ -42,4 +42,7 @@ public class ContestApplication {
     @NotNull
     private Boolean isApproved = false;
 
+    public void changeApproveStatus() {
+        isApproved = !isApproved;
+    }
 }
