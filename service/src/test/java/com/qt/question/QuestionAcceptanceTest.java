@@ -9,15 +9,15 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.reactive.function.BodyInserters;
 
 import java.time.LocalDateTime;
-
-import static org.junit.jupiter.api.Assertions.*;
+import java.util.Map;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -31,6 +31,7 @@ class QuestionAcceptanceTest {
     @BeforeEach
     @DisplayName("콘테스트 질문 등록 테스트")
     void createContest() {
+
         StudentInfo studentInfo = StudentInfo.builder()
                 .studentId(2014l)
                 .name("s1")
@@ -41,7 +42,7 @@ class QuestionAcceptanceTest {
 
         ContestInfo contestInfo = ContestInfo.builder()
                 .name("contest 1")
-                .description("esay contest")
+                .description("easy contest")
                 .activeTime(LocalDateTime.now())
                 .inActiveTime(LocalDateTime.now())
                 .startTime(LocalDateTime.now())
@@ -53,11 +54,11 @@ class QuestionAcceptanceTest {
         WebTestClient.ResponseSpec responseSpec = webTestClient.post()
                 .uri("/questions")
                 .contentType(MediaType.MULTIPART_FORM_DATA)
-                .body(BodyInserters.fromFormData("contest", String.valueOf(contestInfo.toEntity()))
-                        .with("student", String.valueOf(studentInfo.toEntity()))
+                .body(BodyInserters.fromFormData("contest", String.valueOf(1L))
+                        .with("student", String.valueOf(1L))
                         .with("activeTime", String.valueOf(LocalDateTime.now()))
                         .with("problemNumber", String.valueOf(1L))
-                        .with("content", "질문이 있어요")
+                        .with("content", "test")
                         .with("response", " ")
                         .with("createTime", String.valueOf(LocalDateTime.now())))
                 .exchange()
@@ -70,7 +71,7 @@ class QuestionAcceptanceTest {
 
     @Test
     @DisplayName("질문 조회 테스트")
-    void showContest() {
+    void showQuestion() {
         webTestClient.get()
                 .uri("/questions/" + contestId)
                 .exchange()
