@@ -17,7 +17,7 @@ import java.time.LocalDateTime;
 public class Question {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     @NotNull

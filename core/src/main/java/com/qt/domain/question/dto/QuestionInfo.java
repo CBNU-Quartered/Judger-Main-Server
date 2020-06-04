@@ -6,6 +6,7 @@ import com.qt.domain.student.Student;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -20,7 +21,7 @@ public class QuestionInfo {
     @NotNull
     private Contest contest;
 
-    @NotNull
+    @CreatedBy
     private Student student;
 
     @NotNull
