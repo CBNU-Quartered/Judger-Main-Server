@@ -40,4 +40,13 @@ public class StudentInfo {
     public Student toEntity() {
         return new Student(universityCode, studentId, name, email, phoneNumber);
     }
+
+    @Override
+    public String toString() {
+        return  "universityCode='" + universityCode + '\'' +
+                ", studentId=" + studentId +
+                ", name='" + name + '\'' +
+                ", email='" + email + '\'' +
+                ", phoneNumber='" + phoneNumber + '\'';
+    }
 }

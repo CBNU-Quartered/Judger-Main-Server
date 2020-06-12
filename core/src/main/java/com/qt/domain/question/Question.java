@@ -17,21 +17,14 @@ import java.time.LocalDateTime;
 public class Question {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @NotNull
     @ManyToOne
     private Contest contest;
 
-    @CreatedBy
-    @ManyToOne
-    private Student student;
-
-    @NotNull
     private Integer problemNumber;
 
-    @NotNull
     @Lob
     private String content;
 
@@ -41,9 +34,8 @@ public class Question {
     @CreatedDate
     private LocalDateTime createTime;
 
-    public Question(@NotNull Contest contest, Student student, @NotNull Integer problemNumber, @NotNull String content, String response, LocalDateTime createTime) {
+    public Question(@NotNull Contest contest, @NotNull Integer problemNumber, @NotNull String content, String response, LocalDateTime createTime) {
         this.contest = contest;
-        this.student = student;
         this.problemNumber = problemNumber;
         this.content = content;
         this.response = response;

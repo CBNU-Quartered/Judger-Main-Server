@@ -59,4 +59,16 @@ public class ContestInfo {
     public Contest toEntity() {
         return new Contest(name, description, activeTime, inActiveTime, startTime, endTime, freezeTime, unFreezeTime);
     }
+
+    @Override
+    public String toString() {
+        return "name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", activeTime=" + activeTime +
+                ", inActiveTime=" + inActiveTime +
+                ", startTime=" + startTime +
+                ", endTime=" + endTime +
+                ", freezeTime=" + freezeTime +
+                ", unFreezeTime=" + unFreezeTime;
+    }
 }
