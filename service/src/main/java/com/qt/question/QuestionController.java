@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.*;
 import java.net.URI;
 
 @RestController
-@RequestMapping("/questions")
 public class QuestionController {
 
     private final QuestionService questionService;
@@ -16,13 +15,13 @@ public class QuestionController {
         this.questionService = questionService;
     }
 
-    @PostMapping
-    public ResponseEntity createQuestion(@ModelAttribute QuestionInfo questionInfo) {
-        Long id = questionService.save(questionInfo);
+    @PostMapping("/contests/{id}/questions")
+    public ResponseEntity createQuestion(@PathVariable("id")Long contestId, @ModelAttribute QuestionInfo questionInfo) {
+        Long id = questionService.save(contestId, questionInfo);
         return ResponseEntity.created(URI.create("/questions/" + id)).build();
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/questions/{id}")
     public ResponseEntity<QuestionInfo> showContestInfo(@PathVariable Long id) {
         QuestionInfo questionInfo = questionService.findById(id);
         return ResponseEntity.ok(questionInfo);
@@ -35,14 +34,14 @@ public class QuestionController {
 //        return ResponseEntity.noContent().build();
 //    }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity deleteQuestion(@PathVariable Long id) {
+    @DeleteMapping("/questions/{id}")
+    public ResponseEntity<?> deleteQuestion(@PathVariable Long id) {
         questionService.deleteQuestion(id);
         return ResponseEntity.noContent().build();
     }
 
     @ExceptionHandler
-    public ResponseEntity eventErrorHandler(NotFoundQuestionException exception) {
+    public ResponseEntity<?> eventErrorHandler(NotFoundQuestionException exception) {
         return ResponseEntity.notFound().build();
     }
 }

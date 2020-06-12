@@ -1,7 +1,12 @@
 package com.qt.question;
 
+import com.qt.domain.contest.Contest;
 import com.qt.domain.question.Question;
 import com.qt.domain.question.dto.QuestionInfo;
+import com.qt.domain.student.Student;
+import com.qt.ext.ContestRepository;
+import com.qt.ext.NotFoundContestException;
+import com.qt.ext.StudentRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -10,15 +15,22 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class QuestionService {
 
+    private final ContestRepository contestRepository;
     private final QuestionRepository questionRepository;
     private final ModelMapper modelMapper;
 
-    public QuestionService(QuestionRepository questionRepository, ModelMapper modelMapper) {
+    public QuestionService(ContestRepository contestRepository, QuestionRepository questionRepository, ModelMapper modelMapper) {
+        this.contestRepository = contestRepository;
         this.questionRepository = questionRepository;
         this.modelMapper = modelMapper;
     }
 
-    public Long save(QuestionInfo questionInfo) {
+    public Long save(Long contestId, QuestionInfo questionInfo) {
+        Contest contest = contestRepository.findById(contestId)
+                .orElseThrow(NotFoundContestException::new);
+
+        questionInfo.setContest(contest);
+
         Question question = questionInfo.toEntity();
         return questionRepository.save(question).getId();
     }
