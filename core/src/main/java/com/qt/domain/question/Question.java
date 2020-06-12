@@ -17,21 +17,22 @@ import java.time.LocalDateTime;
 public class Question {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @NotNull
     @ManyToOne
     private Contest contest;
 
+<<<<<<< HEAD
+=======
     @CreatedBy
     @ManyToOne
     private User user;
 
     @NotNull
+>>>>>>> 9b0c369c9a946ec3fab067eb56d17b344a01d415
     private Integer problemNumber;
 
-    @NotNull
     @Lob
     private String content;
 
@@ -41,9 +42,8 @@ public class Question {
     @CreatedDate
     private LocalDateTime createTime;
 
-    public Question(@NotNull Contest contest, User user, @NotNull Integer problemNumber, @NotNull String content, String response, LocalDateTime createTime) {
+    public Question(@NotNull Contest contest, @NotNull Integer problemNumber, @NotNull String content, String response, LocalDateTime createTime) {
         this.contest = contest;
-        this.user = user;
         this.problemNumber = problemNumber;
         this.content = content;
         this.response = response;
