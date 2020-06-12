@@ -6,6 +6,9 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 @Transactional
 public class ContestService {
@@ -21,6 +24,13 @@ public class ContestService {
     public Long save(ContestInfo contestInfo) {
         Contest contest = contestInfo.toEntity();
         return contestRepository.save(contest).getId();
+    }
+
+    @Transactional(readOnly = true)
+    public List<ContestInfo> findAll() {
+        return contestRepository.findAll().stream()
+                .map(contest -> modelMapper.map(contest, ContestInfo.class))
+                .collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)

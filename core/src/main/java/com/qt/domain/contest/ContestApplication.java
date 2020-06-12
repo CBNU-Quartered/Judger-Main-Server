@@ -1,6 +1,6 @@
 package com.qt.domain.contest;
 
-import com.qt.domain.student.Student;
+import com.qt.domain.user.User;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedBy;
@@ -18,11 +18,9 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class ContestApplication {
 
-    public ContestApplication(@NotNull Contest contest, @NotNull Student student, @NotNull LocalDateTime createTime, @NotNull Boolean isApproved) {
+    public ContestApplication(@NotNull Contest contest, @NotNull User user) {
         this.contest = contest;
-        this.student = student;
-        this.createTime = createTime;
-        this.isApproved = isApproved;
+        this.user = user;
     }
 
     @Id
@@ -36,13 +34,15 @@ public class ContestApplication {
     @NotNull
     @CreatedBy
     @ManyToOne
-    private Student student;
+    private User user;
 
-    @NotNull
     @CreatedDate
     private LocalDateTime createTime;
 
     @NotNull
     private Boolean isApproved = false;
 
+    public void changeApproveStatus() {
+        isApproved = !isApproved;
+    }
 }

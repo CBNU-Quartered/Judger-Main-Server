@@ -3,6 +3,7 @@ package com.qt.contest;
 import com.qt.AcceptanceTestUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,20 +16,21 @@ import org.springframework.web.reactive.function.BodyInserters;
 
 import java.time.LocalDateTime;
 
-import static org.hamcrest.Matchers.greaterThan;
-
-
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class ContestAcceptanceTest {
+public class ContestProblemRegistrationAcceptanceTest {
 
     @Autowired
     private WebTestClient webTestClient;
 
     private String contestId;
 
+    private String problemId1;
+
+    private String problemId2;
+
     @BeforeEach
-    @DisplayName("콘테스트 등록 테스트")
+    @DisplayName("콘테스트에 문제 추가 테스트")
     void createContest() {
         WebTestClient.ResponseSpec responseSpec = webTestClient.post()
                 .uri("/contests")
@@ -47,83 +49,12 @@ public class ContestAcceptanceTest {
                 .expectHeader().valueMatches("location", "/contests/[1-9]+[0-9]*");
 
         contestId = AcceptanceTestUtils.extractDomainIdFromCreatedResourceAddress(responseSpec);
-    }
 
-    @Test
-    @DisplayName("콘테스트 전체 조회 테스트")
-    void showAllContest() {
-        webTestClient.get()
-                .uri("/contests")
-                .exchange()
-                .expectStatus()
-                .isOk()
-                .expectBody()
-                .jsonPath("$.length()", greaterThan(1));
-    }
-
-    @Test
-    @DisplayName("콘테스트 조회 테스트")
-    void showContest() {
-        webTestClient.get()
-                .uri("/contests/" + contestId)
-                .exchange()
-                .expectStatus()
-                .isOk()
-                .expectBody()
-                .jsonPath("$.name").isEqualTo("contest1");
-    }
-
-    @Test
-    @DisplayName("콘테스트 수정 테스트")
-    void updateContest() {
-        webTestClient.post()
-                .uri("/contests/" + contestId)
-                .contentType(MediaType.MULTIPART_FORM_DATA)
-                .body(BodyInserters.fromFormData("name", "update contest")
-                        .with("description", "easy contests")
-                        .with("activeTime", String.valueOf(LocalDateTime.now()))
-                        .with("inActiveTime", String.valueOf(LocalDateTime.now()))
-                        .with("startTime", String.valueOf(LocalDateTime.now()))
-                        .with("endTime", String.valueOf(LocalDateTime.now()))
-                        .with("freezeTime", String.valueOf(LocalDateTime.now()))
-                        .with("unFreezeTime", String.valueOf(LocalDateTime.now())))
-                .exchange()
-                .expectStatus()
-                .isNoContent();
-
-        webTestClient.get()
-                .uri("/contests/" + contestId)
-                .exchange()
-                .expectStatus()
-                .isOk()
-                .expectBody()
-                .jsonPath("$.name").isEqualTo("update contest");
-    }
-
-    @Test
-    @DisplayName("콘테스트 삭제 테스트")
-    void deleteContest() {
-        webTestClient.delete()
-                .uri("/contests/" + contestId)
-                .exchange()
-                .expectStatus()
-                .isNoContent();
-
-        webTestClient.get()
-                .uri("/contests/" + contestId)
-                .exchange()
-                .expectStatus()
-                .isNotFound();
-    }
-
-    @Test
-    @DisplayName("콘테스트에 문제 추가 테스트")
-    void registerProblem() {
         //POST problem1을 저장
-        String problemId1 = createProblem("test1");
+        problemId1 = createProblem("test1");
 
         //POST problem2을 저장
-        String problemId2 = createProblem("test2");
+        problemId2 = createProblem("test2");
 
         //POST contest에 problem 2개 추가
         webTestClient.post()
@@ -136,7 +67,17 @@ public class ContestAcceptanceTest {
                 .isNoContent();
     }
 
-
+    @Test
+    @DisplayName("콘테스트에 등록된 문제 조회 테스트")
+    void showRegisteredProblems() {
+        webTestClient.get()
+                .uri("/contests/" + contestId + "/problems")
+                .exchange()
+                .expectStatus()
+                .isOk()
+                .expectBody()
+                .jsonPath("$.length()").isEqualTo(2);
+    }
 
     private String createProblem(String test1) {
         ByteArrayResource file1 = new ByteArrayResource(new byte[]{1, 2, 3}) {

@@ -1,6 +1,6 @@
-package com.qt.domain.student.dto;
+package com.qt.domain.user.dto;
 
-import com.qt.domain.student.Student;
+import com.qt.domain.user.User;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,13 +13,13 @@ import javax.validation.constraints.NotNull;
 @Setter
 @Getter
 @NoArgsConstructor
-public class StudentInfo {
+public class UserInfo {
 
     @NotNull
     private String universityCode;
     @NotNull
     @Column(unique = true)
-    private Long studentId;
+    private String userId;
     @NotNull
     private String name;
     @NotNull
@@ -29,16 +29,16 @@ public class StudentInfo {
     private String phoneNumber;
 
     @Builder
-    public StudentInfo(@NotNull String universityCode, @NotNull Long studentId, @NotNull String name, @NotNull @Email String email, @NotNull String phoneNumber) {
+    public UserInfo(@NotNull String universityCode, @NotNull String userId, @NotNull String name, @NotNull @Email String email, @NotNull String phoneNumber) {
         this.universityCode = universityCode;
-        this.studentId = studentId;
+        this.userId = userId;
         this.name = name;
         this.email = email;
         this.phoneNumber = phoneNumber;
     }
 
-    public Student toEntity() {
-        return new Student(universityCode, studentId, name, email, phoneNumber);
+    public User toEntity() {
+        return new User(universityCode, userId, name, email, phoneNumber);
     }
 
     @Override

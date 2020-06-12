@@ -19,9 +19,11 @@ import java.util.List;
 public class ProblemController {
 
     private final ProblemService problemService;
+    private final TestcaseService testcaseService;
 
-    public ProblemController(ProblemService problemService) {
+    public ProblemController(ProblemService problemService, TestcaseService testcaseService) {
         this.problemService = problemService;
+        this.testcaseService = testcaseService;
     }
 
     @GetMapping
@@ -44,7 +46,7 @@ public class ProblemController {
 
     @GetMapping("/{id}/files")
     public ResponseEntity<Resource> downloadFile(@PathVariable Long id) throws IOException {
-        FileInfo fileInfo = problemService.findFile(id);
+        FileInfo fileInfo = problemService.findProblemFile(id);
         return ResponseEntity.ok()
                 .header(HttpHeaders.CONTENT_DISPOSITION, "inline")
                 .header(HttpHeaders.CONTENT_LENGTH, fileInfo.getContentLength())
@@ -65,8 +67,8 @@ public class ProblemController {
     }
 
     @PostMapping("/{id}/testcase")
-    public ResponseEntity registerTestcase(@PathVariable Long id, @RequestParam List<MultipartFile> in, @RequestParam List<MultipartFile> out) throws IOException {
-        problemService.registerTestcase(id, in, out);
+    public ResponseEntity uploadTestcases(@PathVariable Long id, @RequestParam List<MultipartFile> in, @RequestParam List<MultipartFile> out) throws IOException {
+        testcaseService.uploadTestcases(id, in, out);
         return ResponseEntity.noContent().build();
     }
 

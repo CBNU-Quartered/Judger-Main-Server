@@ -1,6 +1,6 @@
 package com.qt.domain.question;
 
-import com.qt.domain.student.Student;
+import com.qt.domain.user.User;
 import com.qt.domain.contest.Contest;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -23,6 +23,14 @@ public class Question {
     @ManyToOne
     private Contest contest;
 
+<<<<<<< HEAD
+=======
+    @CreatedBy
+    @ManyToOne
+    private User user;
+
+    @NotNull
+>>>>>>> 9b0c369c9a946ec3fab067eb56d17b344a01d415
     private Integer problemNumber;
 
     @Lob

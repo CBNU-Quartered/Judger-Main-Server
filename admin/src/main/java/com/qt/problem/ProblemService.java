@@ -23,9 +23,6 @@ public class ProblemService {
     private static final String LOCAL_PROBLEM_STORAGE_PATH = "/Users/hyogeon/IdeaProjects/judger-main-server/admin/src/main/resources/static/problems/";
 
     private static final String FILE_PATH = "file:";
-    private static final String TEST_CASE_PATH = "/tc";
-    private static final String TEST_CASE_INPUT_PATH = "/in";
-    private static final String TEST_CASE_OUTPUT_PATH = "/out";
 
     private final ProblemRepository problemRepository;
     private final ModelMapper modelMapper;
@@ -59,7 +56,7 @@ public class ProblemService {
     }
 
     @Transactional(readOnly = true)
-    public FileInfo findFile(Long id) throws IOException {
+    public FileInfo findProblemFile(Long id) throws IOException {
         Problem problem = problemRepository.findById(id).orElseThrow(NotFoundProblemException::new);
         String identifier = problem.getIdentifier();
         Resource resource = resourceLoader.getResource(FILE_PATH + LOCAL_PROBLEM_STORAGE_PATH + identifier + "/" + problem.getName());
@@ -81,25 +78,6 @@ public class ProblemService {
     public void deleteProblem(Long id) throws IOException {
         Problem problem = deleteProblemFile(id);
         problemRepository.delete(problem);
-    }
-
-    public void registerTestcase(Long id, List<MultipartFile> in, List<MultipartFile> out) throws IOException {
-        String identifier = problemRepository.findById(id).orElseThrow(NotFoundProblemException::new).getIdentifier();
-        String testcaseDirectory = LOCAL_PROBLEM_STORAGE_PATH + identifier + TEST_CASE_PATH;
-        new File(testcaseDirectory).mkdir();
-
-        String inputDirectory = testcaseDirectory + TEST_CASE_INPUT_PATH;
-        String outputDirectory = testcaseDirectory + TEST_CASE_OUTPUT_PATH;
-        new File(inputDirectory).mkdir();
-        new File(outputDirectory).mkdir();
-
-        for (MultipartFile input : in) {
-            input.transferTo(new File(inputDirectory + "/" + input.getOriginalFilename()));
-        }
-
-        for (MultipartFile output : out) {
-            output.transferTo(new File(outputDirectory + "/" + output.getOriginalFilename()));
-        }
     }
 
     private String saveProblemFile(MultipartFile file, String name) throws IOException {
